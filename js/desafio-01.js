@@ -35,7 +35,7 @@ class ProductManager{
             console.log(this.listProducts[this.listProducts.length-1]) //Devuelve el último producto agregado.
         }
         else{
-            console.log('No existen productos en la lista.')
+            console.log(this.listProducts)
         }
 
     }
@@ -81,11 +81,14 @@ class ProductManager{
 
 const newProduct = new ProductManager()
 
-newProduct.addProduct()
-newProduct.getProducts()
-newProduct.addProduct()
-newProduct.getProducts()
-newProduct.getProductById('abc123')
+//FUNCIONAMIENTO AL EJECUTARSE:
+
+newProduct.getProducts() //DEVUELVE ARREGLO VACIO
+newProduct.addProduct() //AGREGA EL PRODUCTO
+newProduct.getProducts() //MUESTRA EL ÚLTIMO PRODUCTO AGREGADO
+newProduct.addProduct() //COMO EL PRODUCTO TIENE UN 'CODE' YA EXISTEN, NO LO AGREGA.
+newProduct.getProducts() //MUESTRA EL ÚLTIMO PRODUCTO AGREGADO
+newProduct.getProductById('abc123') //BUSCA PRODUCTO POR CODE. ACÁ VINO EL INCONVENIENTE QUE MENCIONÉ EN LOS COMENTARIOS DEL COMIENZO, NO SÉ SI UTILIZABAN ID Y CODE COMO SINÓNIMOS.
 
 
 

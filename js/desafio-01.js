@@ -38,7 +38,7 @@ class ProductManager{
     }
 
     getProductById(id){
-        console.log('Búsqueda:' , this.products.find(producto => producto.id == id) || 'Producto NO encontrado.')
+        console.log('Búsqueda por Id:' , this.products.find(producto => producto.id == id) || 'Producto NO encontrado.')
     }
 
 }
@@ -50,6 +50,6 @@ newProduct.getProducts()
 newProduct.addProduct('Nintendo', 'Consola de Videojuegos', 150000, 'Sin Imagen', 50)
 newProduct.addProduct('PS4', 'Consola de Videojuegos', 120000, 'No existe', 20)
 newProduct.getProducts() 
-newProduct.getProductById(0)
+newProduct.getProductById(1)
 
 

@@ -162,7 +162,7 @@ const newProduct = new ProductManager()
 // newProduct.getProductById(1)
 // newProduct.deleteProduct(1)
 // newProduct.getProductById(1)
-// newProduct.updateProduct(1, 999999)
+// newProduct.updateProduct(1, 999999) //Modifica el precio el segundo parámetro.
 // newProduct.getProducts()
 
 

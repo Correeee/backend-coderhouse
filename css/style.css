@@ -53,4 +53,13 @@ li{
     margin-top: 2rem;
 }
 
+.title{
+    font-size: 10rem;
+}
 
+
+@media screen and (max-width: 468px) {
+    .title{
+        font-size: 4rem;
+    }
+}

@@ -153,11 +153,19 @@ class ProductManager {
 
 const newProduct = new ProductManager()
 
-newProduct.addProduct('Nintendo Switch', 'Consola de Videojuegos', 150000, 'Sin imagen', 50)
-newProduct.addProduct('Playstation 5', 'Consola', 250000, 'Sin imagen', 10)
-newProduct.addProduct('Auriculares XBOX', 'Accesorio', 25000, 'Sin imagen', 20)
+const test = async ()=>{
+    try{
+        await newProduct.addProduct('Nintendo Switch', 'Consola de Videojuegos', 150000, 'Sin imagen', 50)
+        await newProduct.addProduct('Playstation 5', 'Consola', 250000, 'Sin imagen', 10)
+        await newProduct.addProduct('Auriculares XBOX', 'Accesorio', 25000, 'Sin imagen', 20)
+        await newProduct.getProducts()
+        await newProduct.getProductById(2)
+        await newProduct.deleteProduct(1)
+        await newProduct.updateProduct(3, 999999) 
+        await newProduct.getProducts()
+    }catch(error){
+        console.log(error)
+    }
+}
 
-newProduct.getProducts()
-newProduct.getProductById(2)
-newProduct.deleteProduct(1)
-newProduct.updateProduct(3, 999999) 
+test()

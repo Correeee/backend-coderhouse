@@ -1,7 +1,7 @@
 /* -------------------- DESAFIO 02 ------------------- */
 
 const fs = require('fs')
-const path = './desafio-02.json'
+const path = './ProductManager.json'
 
 class ProductManager {
     #firstId = 0;
@@ -105,8 +105,8 @@ class ProductManager {
                     const productsJSON = JSON.parse(products)
                     const productFound = productsJSON.filter((prod) => prod.id == idProduct); //PRODUCTO
                     const productFilter = productsJSON.filter((prod) => prod.id != idProduct); // NUEVO ARRAY
-                    if (productFound[0]) {
-                        fs.promises.writeFile(path, JSON.stringify(productFilter))
+                    if (productFound) {
+                        await fs.promises.writeFile(path, JSON.stringify(productFilter))
                         return console.log('Producto borrado con éxito: ', productFound)
                     } else {
                         return console.log('El producto NO pudo ser borrado. El producto es inexistente.')
@@ -132,9 +132,8 @@ class ProductManager {
                     if(productFilter.length != 0){
                         const productRest = productsJSON.filter((prod) => prod.id != idProduct)
                         productFilter = {...productFilter[0], price: price}
-                        const productUpdate = []
-                        productUpdate.push(...productRest, productFilter)
-                        await fs.writeFileSync(path, JSON.stringify(productUpdate))
+                        const productUpdate = [...productRest, productFilter]
+                        await fs.promises.writeFile(path, JSON.stringify(productUpdate))
                         return console.log('PRODUCTO ACTUALIZADO: ', productFilter)
                     }else{
                         return console.log('La ID del producto NO existe.')
@@ -154,17 +153,11 @@ class ProductManager {
 
 const newProduct = new ProductManager()
 
-// newProduct.addProduct('Nintendo Switch', 'Consola de Videojuegos', 150000, 'Sin imagen', 50)
-// newProduct.addProduct('Playstation 5', 'Consola', 250000, 'Sin imagen', 10)
-// newProduct.addProduct('Auriculares XBOX', 'Accesorio', 25000, 'Sin imagen', 20)
+newProduct.addProduct('Nintendo Switch', 'Consola de Videojuegos', 150000, 'Sin imagen', 50)
+newProduct.addProduct('Playstation 5', 'Consola', 250000, 'Sin imagen', 10)
+newProduct.addProduct('Auriculares XBOX', 'Accesorio', 25000, 'Sin imagen', 20)
 
-// newProduct.getProducts()
-// newProduct.getProductById(1)
-// newProduct.deleteProduct(1)
-// newProduct.getProductById(1)
-// newProduct.updateProduct(1, 999999) //Modifica el precio el segundo parámetro.
-// newProduct.getProducts()
-
-
-
-
+newProduct.getProducts()
+newProduct.getProductById(2)
+newProduct.deleteProduct(1)
+newProduct.updateProduct(3, 999999) 

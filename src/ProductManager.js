@@ -1,6 +1,6 @@
 /* -------------------- DESAFIO 02 ------------------- */
+import fs from 'fs';
 
-const fs = require('fs')
 const path = './ProductManager.json'
 
 class ProductManager {
@@ -156,8 +156,16 @@ const newProduct = new ProductManager()
 const test = async ()=>{
     try{
         await newProduct.addProduct('Nintendo Switch', 'Consola de Videojuegos', 150000, 'Sin imagen', 50)
-        await newProduct.addProduct('Playstation 5', 'Consola', 250000, 'Sin imagen', 10)
-        await newProduct.addProduct('Auriculares XBOX', 'Accesorio', 25000, 'Sin imagen', 20)
+        await newProduct.addProduct('Playstation 5', 'Consola de Videojuegos', 250000, 'Sin imagen', 10)
+        await newProduct.addProduct('Auriculares XBOX', 'Accesorio', 20000, 'Sin imagen', 32)
+        await newProduct.addProduct('Nintendo 3DS', 'Consola de Videojuegos', 100000, 'Sin imagen', 23)
+        await newProduct.addProduct('Mouse Logitech', 'Accesorio', 10000, 'Sin imagen', 10)
+        await newProduct.addProduct('HP 14', 'Notebooks', 250000, 'Sin imagen', 30)
+        await newProduct.addProduct('HP 12', 'Notebooks', 200000, 'Sin imagen', 5)
+        await newProduct.addProduct('Xiaomi MI 10t', 'Celular', 112000, 'Sin imagen', 2)
+        await newProduct.addProduct('Iphone 14', 'Celular', 500000, 'Sin imagen', 40)
+        await newProduct.addProduct('Iphone 13', 'Celular', 400000, 'Sin imagen', 65)
+        await newProduct.addProduct('Iphone 12', 'Celular', 250000, 'Sin imagen', 65)
         await newProduct.getProducts()
         await newProduct.getProductById(2)
         await newProduct.deleteProduct(1)
@@ -169,3 +177,5 @@ const test = async ()=>{
 }
 
 test()
+
+export default productManager;

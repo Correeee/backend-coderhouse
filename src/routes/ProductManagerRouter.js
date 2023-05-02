@@ -1,18 +1,16 @@
-import express from "express";
-import products from './ProductManager.json' assert {type: 'json'}
+import { Router } from "express";
 
-const app = express()
-const PORT = 8080;
+const router = Router()
 
-app.get('/', (req, res)=>{
+router.get('/', (req, res)=>{
     res.send('HOME')
 })
 
-app.get('/products', (req, res)=>{
+router.get('/products', (req, res)=>{
     res.json(products)
 })
 
-app.get('/filterproducts', (req, res)=>{
+router.get('/filterproducts', (req, res)=>{
     const {limit} = req.query;
     
     const productsLimit = products.slice(0, limit)
@@ -24,7 +22,7 @@ app.get('/filterproducts', (req, res)=>{
     }
 })
 
-app.get('/products/:pid', (req, res)=>{
+router.get('/products/:pid', (req, res)=>{
     const {pid} = req.params;
 
     const productFilter = products.find(prod => prod.id == parseInt(pid))
@@ -36,6 +34,5 @@ app.get('/products/:pid', (req, res)=>{
     }
 })
 
-app.listen(PORT, () =>{
-    console.log(`Servidor en puerto ${PORT}`)
-})
+
+export default router;

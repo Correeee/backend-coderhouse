@@ -151,6 +151,6 @@ const test = async () => {
     }
 }
 
-test()
+// test()
 
 export default Cart;

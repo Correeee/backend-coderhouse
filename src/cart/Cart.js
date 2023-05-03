@@ -15,7 +15,10 @@ class Cart {
         const cartsJSON = JSON.parse(allCarts)
 
         if (cartsJSON.length > 0) {
-            let id = cartsJSON.length + 1
+            const cartIds = cartsJSON.map(cart => cart.id)
+            const maxNumber = Math.max(...cartIds)
+            console.log(cartIds , maxNumber)
+            let id = maxNumber + 1
             return id
         } else {
             this.#firstId += 1
@@ -130,7 +133,6 @@ const test = async () => {
     }
 }
 
-
-test()
+// test()
 
 export default Cart;

@@ -17,7 +17,7 @@ class Cart {
         if (cartsJSON.length > 0) {
             const cartIds = cartsJSON.map(cart => cart.id)
             const maxNumber = Math.max(...cartIds)
-            console.log(cartIds , maxNumber)
+            console.log(cartIds, maxNumber)
             let id = maxNumber + 1
             return id
         } else {
@@ -96,10 +96,24 @@ class Cart {
                     const productFound = products.find(product => product.id == idProduct)
                     if (productFound) {
                         const restCarts = cartReader.filter(cart => cart.id != idCart)
-                        cartFilter.products.push({ id: productFound.id, quantity: 1 })
-                        restCarts.push(cartFilter)
-                        await fs.promises.writeFile(path, JSON.stringify(restCarts))
-                        return cartFilter
+                        if (cartFilter.products.length) {
+                            const productMod = {
+                                id: cartFilter.id,
+                                products: [{
+                                    id: cartFilter.products[0].id,
+                                    quantity: cartFilter.products[0].quantity + 1
+                                }]
+                            }
+                            restCarts.push(productMod)
+                            await fs.promises.writeFile(path, JSON.stringify(restCarts))
+                            return productMod
+                        } else {
+                            cartFilter.products.push({ id: productFound.id, quantity: 1 })
+                            restCarts.push(cartFilter)
+                            await fs.promises.writeFile(path, JSON.stringify(restCarts))
+                            return cartFilter
+                        }
+
                     } else {
                         return console.log('Product not found.')
                     }
@@ -125,7 +139,11 @@ const test = async () => {
         await newCart.createCart()
         await newCart.createCart()
         await newCart.createCart()
+        await newCart.addToCart(1, 1)
+        await newCart.createCart()
+        await newCart.createCart()
         await newCart.getCartById(1)
+        await newCart.addToCart(1, 1)
         await newCart.addToCart(1, 1)
 
     } catch (error) {
@@ -133,6 +151,6 @@ const test = async () => {
     }
 }
 
-// test()
+test()
 
 export default Cart;

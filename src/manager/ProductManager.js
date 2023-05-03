@@ -3,7 +3,6 @@ import fs from 'fs';
 
 const path = 'src/manager/ProductManager.json'
 
-
 class ProductManager {
     #firstId = 0;
     constructor(path) {
@@ -132,20 +131,20 @@ const newProduct = new ProductManager()
 const test = async () => {
     try {
         await newProduct.getProducts()
-        await newProduct.addProduct({ title: 'Nintendo Switch', description: 'Consola de Videojuegos', price: 150000, image: 'Sin imagen', stock: 50 })
-        await newProduct.addProduct({ title: 'Playstation 5', description: 'Consola de Videojuegos', price: 250000, image: 'Sin imagen', stock: 10 })
-        await newProduct.addProduct({ title: 'Auriculares XBOX', description: 'Accesorio', price: 20000, image: 'Sin imagen', stock: 32 })
-        await newProduct.addProduct({ title: 'Nintendo 3DS', description: 'Consola de Videojuegos', price: 100000, image: 'Sin imagen', stock: 23 })
-        await newProduct.addProduct({ title: 'Mouse Logitech', description: 'Accesorio', price: 10000, image: 'Sin imagen', stock: 10 })
-        await newProduct.addProduct({ title: 'HP 14', description: 'Notebooks', price: 250000, image: 'Sin imagen', stock: 30 })
-        await newProduct.addProduct({ title: 'HP 12', description: 'Notebooks', price: 200000, image: 'Sin imagen', stock: 5 })
-        await newProduct.addProduct({ title: 'Xiaomi MI 10t', description: 'Celular', price: 112000, image: 'Sin imagen', stock: 2 })
-        await newProduct.addProduct({ title: 'Iphone 14', description: 'Celular', price: 500000, image: 'Sin imagen', stock: 40 })
-        await newProduct.addProduct({ title: 'Iphone 13', description: 'Celular', price: 400000, image: 'Sin imagen', stock: 65 })
-        await newProduct.addProduct({ title: 'Iphone 12', description: 'Celular', price: 250000, image: 'Sin imagen', stock: 65 })
+        await newProduct.addProduct({ title: 'Nintendo Switch', description: 'Consola de Videojuegos',category: 'Consolas', code: 'C1', price: 150000, thumbnail: 'Sin imagen', stock: 50 })
+        await newProduct.addProduct({ title: 'Playstation 5', description: 'Consola de Videojuegos', category: 'Consolas', code: 'C2', price: 250000, status: true, thumbnail: 'Sin imagen', stock: 10 })
+        await newProduct.addProduct({ title: 'Auriculares XBOX', description: 'Accesorio para XBOX', category: 'Accesorios', code: 'A1', price: 20000, status: true, thumbnail: 'Sin imagen', stock: 32 })
+        await newProduct.addProduct({ title: 'Nintendo 3DS', description: 'Consola de Videojuegos', category: 'Consolas', code: 'C3', price: 100000, status: true, thumbnail: 'Sin imagen', stock: 23 })
+        await newProduct.addProduct({ title: 'Mouse Logitech', description: 'Accesorio para PC', category: 'Accesorios', code: 'A2', price: 10000, status: true, thumbnail: 'Sin imagen', stock: 10 })
+        await newProduct.addProduct({ title: 'HP 14', description: 'Notebooks', category: 'PCs', code: 'P1', price: 250000, status: true, thumbnail: 'Sin imagen', stock: 30 })
+        await newProduct.addProduct({ title: 'HP 12', description: 'Notebooks', category: 'PCs', code: 'P2', price: 200000, status: true, thumbnail: 'Sin imagen', stock: 5 })
+        await newProduct.addProduct({ title: 'Xiaomi MI 10t', description: 'Celular', category: 'Celulares', code: 'CE1', price: 112000, status: true, thumbnail: 'Sin imagen', stock: 2 })
+        await newProduct.addProduct({ title: 'Iphone 14', description: 'Celular', category: 'Celulares', code: 'CE2', price: 500000, status: true, thumbnail: 'Sin imagen', stock: 40 })
+        await newProduct.addProduct({ title: 'Iphone 13', description: 'Celular', category: 'Celulares', code: 'CE3', price: 400000, status: true, thumbnail: 'Sin imagen', stock: 65 })
+        await newProduct.addProduct({ title: 'Iphone 12', description: 'Celular', category: 'Celulares', code: 'CE4', price: 250000, status: true, thumbnail: 'Sin imagen', stock: 65 })
         // await newProduct.getProductById(1)
         // await newProduct.deleteProduct(2)
-        // await newProduct.updateProduct({ title: 'Nintendo Switch', description: 'Consola de Videojuegos', price: 150000, image: 'Sin imagen', stock: 5000 }, 1)
+        // await newProduct.updateProduct({ title: 'Nintendo Switch', description: 'Consola de Videojuegos', price: 150000, thumbnail: 'Sin imagen', stock: 5000 }, 1)
     } catch (error) {
         console.log(error)
     }

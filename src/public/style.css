@@ -1,0 +1,41 @@
+:root{
+    --color-black: #222;
+    --color-white: #E8E8E8;
+}
+
+html{
+    font-size: 62.5%;
+    margin: 0;
+    padding: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body{
+    background-color: white;
+}
+
+h1{
+    text-align: center;
+    font-size: 7rem;
+}
+
+h2{
+    text-align: center;
+    font-size: 4rem;
+}
+
+.div__list{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 60rem;
+    overflow: auto;
+    background-color: var(--color-black);
+    color: white;
+}
+
+.div__list li{
+    margin: 3rem 0;
+    font-size: 2rem;
+    font-weight: bold;
+}

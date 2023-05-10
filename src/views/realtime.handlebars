@@ -1,6 +1,16 @@
 <h2>REAL TIME PRODUCTS - WEBSOCKETS</h2>
+
+<form action="" id="form" type="submit" method="post">
+    <input type="text" name="producto" id="product" placeholder="Producto" required>
+    <input type="number" name="precio" id="price" placeholder="Precio" required>
+    <button form="form" id="submit">CREAR</button>
+</form>
+
 <div class="div__list">
-    <ul>
-        <li></li>
+    <ul id="div__list_ul">
+        
     </ul>
 </div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/index.js"></script>

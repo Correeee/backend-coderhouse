@@ -5,7 +5,6 @@ const productManager = new ProductManager(__dirname + '/manager/ProductManager.j
 
 const router = Router();
 
-
 router.get('/', async (req, res) => {
     try {
         const products = await productManager.getProducts()

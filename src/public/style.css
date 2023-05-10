@@ -1,41 +1,94 @@
-:root{
+:root {
     --color-black: #222;
     --color-white: #E8E8E8;
 }
 
-html{
+html {
     font-size: 62.5%;
     margin: 0;
     padding: 0;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-body{
+body {
     background-color: white;
 }
 
-h1{
+h1 {
     text-align: center;
     font-size: 7rem;
-}
-
-h2{
-    text-align: center;
-    font-size: 4rem;
-}
-
-.div__list{
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: 60rem;
-    overflow: auto;
     background-color: var(--color-black);
     color: white;
 }
 
-.div__list li{
-    margin: 3rem 0;
+h2 {
+    text-align: center;
+    font-size: 4rem;
+    background-color: var(--color-black);
+    color: white;
+}
+
+.div__list {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 59rem;
+    overflow: auto;
+    background-color: var(--color-black);
+}
+
+.div__list li {
+    margin: 1rem 0;
     font-size: 2rem;
     font-weight: bold;
+    background-color: white;
+    padding: 0.5rem 0;
+    color: var(--color-black);
+    list-style:decimal;
+    list-style-position: inside;
+    text-align: center;
+    border-radius: 5px;
+}
+
+#form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+    background-color: var(--color-black);
+    padding: 1rem;
+}
+
+#form input {
+    height: 3rem;
+    width: 20rem;
+    margin: 0 2rem;
+    outline: none;
+}
+
+#form input:focus {
+    outline: 2px solid white;
+}
+
+#form button {
+    height: 4rem;
+    font-weight: bold;
+    background-color: var(--color-black);
+    border: 2px solid white;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+#form button:hover {
+    color: black;
+    background-color: white;
+    transition: 0.2s;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }

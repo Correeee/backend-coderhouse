@@ -7,14 +7,18 @@ import Handlebars from "express-handlebars";
 import { __dirname } from "./path.js";
 import { Server } from "socket.io";
 import ProductManager from "./manager/ProductManager.js";
-const app = express()
+import { errorHandler } from "./middlewares/errorHandler.js";
+import router from "./routes/productRouterMongoose.js";
+import './db/db.js'
 
+const app = express()
 
 /* --------------------------------- EXPRESS -------------------------------- */
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'))
+app.use(errorHandler)
 app.use(express.static(__dirname + '/public'))
 
 /* ------------------------------- HANDLEBARS ------------------------------- */
@@ -22,7 +26,6 @@ app.use(express.static(__dirname + '/public'))
 app.engine('handlebars', Handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('views', __dirname + '/views');
-
 
 /* ---------------------------------- STYLE --------------------------------- */
 
@@ -33,10 +36,9 @@ app.get('/style.css', function (req, res) {
 
 /* --------------------------------- ROUTES --------------------------------- */
 
-app.use('/products', routerProducts);
+app.use('/products', router);
 app.use('/cart', routerCart);
 app.use('/', routerViews)
-
 
 /* --------------------------------- LISTEN --------------------------------- */
 const PORT = 8080;
@@ -50,14 +52,13 @@ const socketServer = new Server(httpServer)
 
 const productManager = new ProductManager()
 
-
 socketServer.on('connection', async (socket) => {
     console.log('Usuario conectado:', socket.id)
 
-    socket.emit('arrayProducts' , await productManager.getProducts())
+    socket.emit('arrayProducts', await productManager.getProducts())
 
-    socket.on('newProduct', async (lastProduct)=>{
+    socket.on('newProduct', async (lastProduct) => {
         await productManager.addProduct(lastProduct)
-        socketServer.emit('arrayNewProduct' , (lastProduct))
+        socketServer.emit('arrayNewProduct', (lastProduct))
     })
 })

@@ -7,16 +7,16 @@ import {
     updateProductController
 } from "../controllers/productsController.js";
 
-const router = Router()
+const routerProductsMongoose = Router()
 
-router.get('/', getAllController);
+routerProductsMongoose.get('/', getAllController);
 
-router.get('/:id', getProductsByIdController);
+routerProductsMongoose.get('/:id', getProductsByIdController);
 
-router.post('/', createProductController);
+routerProductsMongoose.post('/', createProductController);
 
-router.put('/:id', updateProductController);
+routerProductsMongoose.put('/:id', updateProductController);
 
-router.delete('/:id', deleteProductController);
+routerProductsMongoose.delete('/:id', deleteProductController);
 
-export default router;
+export default routerProductsMongoose;

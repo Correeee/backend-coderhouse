@@ -8,7 +8,8 @@ import { __dirname } from "./path.js";
 import { Server } from "socket.io";
 import ProductManager from "./manager/ProductManager.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
-import router from "./routes/productRouterMongoose.js";
+import routerProductsMongoose from "./routes/productRouterMongoose.js";
+import routerCartMongoose from "./routes/cartRouterMongoose.js";
 import './db/db.js'
 
 const app = express()
@@ -36,8 +37,8 @@ app.get('/style.css', function (req, res) {
 
 /* --------------------------------- ROUTES --------------------------------- */
 
-app.use('/products', router);
-app.use('/cart', routerCart);
+app.use('/products', routerProductsMongoose);
+app.use('/cart', routerCartMongoose);
 app.use('/', routerViews)
 
 /* --------------------------------- LISTEN --------------------------------- */

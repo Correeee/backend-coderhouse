@@ -39,7 +39,7 @@ export default class ProductsManagerMongoose {
 
     async updateProduct(id, obj) {
         try {
-            const response = await productsModel.updateOne({_id: id, obj})
+            const response = await productsModel.updateOne({_id: id}, obj)
             return response;
         } catch (error) {
             console.log(error)

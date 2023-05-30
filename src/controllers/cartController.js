@@ -28,23 +28,35 @@ export const getCartByIdController = async (req, res, next) => {
 export const addToCartController = async (req, res, next) => {
     try {
         const { id } = req.params
-        const { title, description, category, code, price, thumbnail, stock } = req.body
-        const docs = await cartManager.addToCart(id, {title, description, category, code, price, thumbnail, stock })
+        const { _id, title, description, category, code, price, thumbnail, stock } = req.body
+        const docs = await cartManager.addToCart(id, { _id, title, description, category, code, price, thumbnail, stock })
+
         if (!docs) {
             throw new Error('No existe este carrito.')
         } else {
-            res.json(docs)
+            const finallyProduct = await cartManager.getCartById(id)
+            res.json(finallyProduct)
         }
     } catch (error) {
         next(error)
     }
 }
 
-export const deleteCartProductController = async (req, res, next) => {
+export const createCartController = async (req, res, next) => {
     try {
-        const { id } = req.params
+
+        const newCart = await cartManager.createCart({})
+
+        if (!newCart) {
+            throw new Error('No se pudo crear el carrito.')
+        } else {
+            res.json(newCart)
+        }
 
     } catch (error) {
         next(error)
     }
+
 }
+
+

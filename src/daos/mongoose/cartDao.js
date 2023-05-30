@@ -40,14 +40,4 @@ export default class CartManagerMongoose {
         }
     }
 
-    async deleteCartProduct(cartId, productId) {
-        try {
-            const cartFounded = await cartModel.findById(cartId)
-            const newProducts = cartFounded.products.map(product => product._id != productId)
-            const cartUpdate = await cartModel.updateOne({ _id: cartId }, { $set: { products: newProducts } })
-            return cartUpdate
-        } catch (error) {
-            console.log(error)
-        }
-    }
 }

@@ -1,9 +1,24 @@
 <h2>REAL TIME PRODUCTS - WEBSOCKETS</h2>
 
 <form action="" id="form" type="submit" method="post">
-    <input type="text" name="producto" id="product" placeholder="Producto" required>
-    <input type="number" name="precio" id="price" placeholder="Precio" required>
-    <button form="form" id="submit">CREAR</button>
+    <div class="div__inputs">
+    <input type="text" name="Producto" id="product" placeholder="Nombre del producto" required>
+    <input type="text" name="Descripcion" id="description" placeholder="Descripción" required>
+    <input type="text" name="Categoria" id="category" placeholder="Categorías" list="categories" required>
+    <input type="text" name="Codigo" id="code" placeholder="Código" required>
+    <input type="number" name="Precio" id="price" placeholder="Precio" required>
+    <input type="text" name="Stock" id="stock" placeholder="Stock" required>
+    <input type="text" name="Thumbnail" id="thumbnail" placeholder="Thumbnail">
+    <datalist id="categories">
+        <option value="Consolas"></option>
+        <option value="Accesorios"></option>
+        <option value="PC"></option>
+        <option value="Celulares"></option>
+    </datalist>
+    </div>
+    <div>
+        <button form="form" id="submit">CREAR PRODUCTO</button>
+    </div>
 </form>
 
 <div class="div__list">

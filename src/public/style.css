@@ -32,17 +32,17 @@ h2 {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    height: 59rem;
+    height: 50rem;
     overflow: auto;
     background-color: var(--color-black);
 }
 
 .div__list li {
-    margin: 1rem 0;
+    margin: 1rem;
     font-size: 2rem;
     font-weight: bold;
     background-color: white;
-    padding: 0.5rem 0;
+    padding: 1rem;
     color: var(--color-black);
     list-style:decimal;
     list-style-position: inside;
@@ -50,9 +50,17 @@ h2 {
     border-radius: 5px;
 }
 
-#form {
+.div__inputs{
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#form {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 1rem 0;
@@ -63,7 +71,7 @@ h2 {
 #form input {
     height: 3rem;
     width: 20rem;
-    margin: 0 2rem;
+    margin: 1rem 1rem;
     outline: none;
 }
 
@@ -72,13 +80,16 @@ h2 {
 }
 
 #form button {
-    height: 4rem;
+    height: 5rem;
+    width: 15rem;
+    font-size: 1.3rem;
     font-weight: bold;
     background-color: var(--color-black);
     border: 2px solid white;
     border-radius: 10px;
     cursor: pointer;
     color: white;
+    margin: 1rem 0;
 }
 
 #form button:hover {
@@ -86,6 +97,7 @@ h2 {
     background-color: white;
     transition: 0.2s;
 }
+
 
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {

@@ -1,9 +1,9 @@
 import { productsModel } from './models/productsModel.js'
 
 export default class ProductsManagerMongoose {
-    async getAllProducts() {
+    async getAllProducts(page = 1, limit = 10) {
         try {
-            const response = await productsModel.find({})
+            const response = await productsModel.paginate({}, {page, limit}) //PAGINACIÓN
             return response;
         } catch (error) {
             console.log(error)
@@ -41,6 +41,39 @@ export default class ProductsManagerMongoose {
         try {
             const response = await productsModel.updateOne({_id: id}, obj)
             return response;
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async categoryFilter(category){ //Agreggation por categoria.
+        try {
+            const response = await productsModel.aggregate([
+                {
+                    $match: {category: `${category}`}
+                }
+            ])
+            return response
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async priceFilter(minPrice, maxPrice){ // Filtro por: Precio Mínimo y Máximo. Orden de Menor a Mayor.
+        try {
+            const response =  await productsModel.aggregate([
+                {
+                    $match: {
+                        price: {$gte: Number(minPrice), $lte: Number(maxPrice)}
+                    }
+                },
+                {
+                    $sort:{
+                        price: 1
+                    }
+                }
+            ])
+            return response
         } catch (error) {
             console.log(error)
         }

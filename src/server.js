@@ -11,8 +11,11 @@ import { errorHandler } from "./middlewares/errorHandler.js";
 import routerProductsMongoose from "./routes/productRouterMongoose.js";
 import routerCartMongoose from "./routes/cartRouterMongoose.js";
 import './db/db.js'
+import messageRouter from "./routes/messageRouterMongoose.js";
+import ProductsManagerMongoose from "./daos/mongoose/productDao.js";
 
 const app = express()
+
 
 /* --------------------------------- EXPRESS -------------------------------- */
 
@@ -40,6 +43,7 @@ app.get('/style.css', function (req, res) {
 app.use('/products', routerProductsMongoose);
 app.use('/cart', routerCartMongoose);
 app.use('/', routerViews)
+app.use('/messages', messageRouter)
 
 /* --------------------------------- LISTEN --------------------------------- */
 const PORT = 8080;
@@ -51,15 +55,15 @@ const httpServer = app.listen(PORT, () => {
 
 const socketServer = new Server(httpServer)
 
-const productManager = new ProductManager()
+const productsManagerMongoose = new ProductsManagerMongoose()
 
 socketServer.on('connection', async (socket) => {
     console.log('Usuario conectado:', socket.id)
 
-    socket.emit('arrayProducts', await productManager.getProducts())
+    socket.emit('arrayProducts', await productsManagerMongoose.getAllProducts())
 
-    socket.on('newProduct', async (lastProduct) => {
-        await productManager.addProduct(lastProduct)
+    socket.on('newProduct', async (lastProduct) => { //Agrega productos a la DB.
+        await productsManagerMongoose.createProduct(lastProduct)
         socketServer.emit('arrayNewProduct', (lastProduct))
     })
 })

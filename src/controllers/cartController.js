@@ -1,6 +1,8 @@
 import CartManagerMongoose from "../daos/mongoose/cartDao.js";
+import ProductsManagerMongoose from '../daos/mongoose/productDao.js'
 
 const cartManager = new CartManagerMongoose()
+const productManager = new ProductsManagerMongoose()
 
 export const getAllCartsController = async (req, res, next) => {
     try {
@@ -27,16 +29,17 @@ export const getCartByIdController = async (req, res, next) => {
 
 export const addToCartController = async (req, res, next) => {
     try {
-        const { id } = req.params
-        const { _id, title, description, category, code, price, thumbnail, stock } = req.body
-        const docs = await cartManager.addToCart(id, { _id, title, description, category, code, price, thumbnail, stock })
+        const { cid } = req.params
+        const { pid } = req.params
+
+        const docs = await cartManager.addToCart(cid, pid)
 
         if (!docs) {
             throw new Error('No existe este carrito.')
         } else {
-            const finallyProduct = await cartManager.getCartById(id)
-            res.json(finallyProduct)
+            res.json(docs)
         }
+
     } catch (error) {
         next(error)
     }
@@ -57,6 +60,21 @@ export const createCartController = async (req, res, next) => {
         next(error)
     }
 
+}
+
+export const emptyCartcontroller = async (req, res, next) => {
+    try {
+        const { cid } = req.params
+        const emptyCart = await cartManager.emptyCart(cid)
+        
+        if (!emptyCart) {
+            throw new Error(`No se pudo vaciar el carrito: ${cid}. `)
+        } else {
+            return res.send(`¡Carrito ${cid} vaciado!`)
+        }
+    } catch (error) {
+        next(error)
+    }
 }
 
 

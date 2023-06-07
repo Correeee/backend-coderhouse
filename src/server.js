@@ -41,7 +41,7 @@ app.get('/style.css', function (req, res) {
 /* --------------------------------- ROUTES --------------------------------- */
 
 app.use('/products', routerProductsMongoose);
-app.use('/cart', routerCartMongoose);
+app.use('/carts', routerCartMongoose);
 app.use('/', routerViews)
 app.use('/messages', messageRouter)
 

@@ -179,7 +179,7 @@ input[type=number]::-webkit-outer-spin-button {
     text-align: center;
 }
 
-.cart__list{
+.products__list{
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -190,7 +190,7 @@ input[type=number]::-webkit-outer-spin-button {
     overflow: hidden;
 }
 
-.cart__list h3{
+.products__list h3{
     font-size: 3rem;
     margin: 0.5rem;
     color: white;

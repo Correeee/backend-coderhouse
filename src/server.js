@@ -14,6 +14,9 @@ import './db/db.js'
 import messageRouter from "./routes/messageRouterMongoose.js";
 import ProductsManagerMongoose from "./daos/mongoose/productDao.js";
 import routerUsersMongoose from "./routes/usersRouterMongoose.js";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import MongoStore from "connect-mongo";
 
 const app = express()
 
@@ -25,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'))
 app.use(errorHandler)
 app.use(express.static(__dirname + '/public'))
+app.use(cookieParser())
 
 /* ------------------------------- HANDLEBARS ------------------------------- */
 
@@ -52,6 +56,27 @@ const PORT = 8080;
 const httpServer = app.listen(PORT, () => {
     console.log(`Servidor en puerto ${PORT}`)
 })
+
+/* --------------------------------- SESSION -------------------------------- */
+
+const storeOptions= {
+    store: MongoStore.create({
+        mongoUrl: "mongodb+srv://Admin:admin123@backendcoderhouse.nugwvm4.mongodb.net/ecommerce?retryWrites=true&w=majority",
+        crypto: {
+            secret: '123456'
+        },
+        autoRemove: 'interval',
+        ttl: 180
+    }),
+    secret: '1234',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 18000
+    }
+}
+
+app.use(session(storeOptions))
 
 /* --------------------------------- SOCKET --------------------------------- */
 

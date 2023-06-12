@@ -98,9 +98,114 @@ h2 {
     transition: 0.2s;
 }
 
-
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+#login{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    background-color: #222;
+}
+
+#login input{
+    margin: 1rem;
+    height: 3rem;
+    width: 25rem;
+}
+
+#login button{
+    margin: 1rem;
+    width: 15rem;
+    height: 5rem;
+    font-weight: bold;
+    font-size: 2rem;
+    border: 1px solid var(--color-white);
+    border-radius: 5px;
+    background-color: #222;
+    color: var(--color-white);
+    cursor: pointer;
+}
+
+#login button:hover{
+    background-color: var(--color-white);
+    color: var(--color-black);
+    transition: 0.25s;
+}
+
+#register{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    background-color: #222;
+}
+
+#register input{
+    margin: 1rem;
+    height: 3rem;
+    width: 25rem;
+}
+
+#register button{
+    margin: 1rem;
+    width: 15rem;
+    height: 5rem;
+    font-weight: bold;
+    font-size: 2rem;
+    border: 1px solid var(--color-white);
+    border-radius: 5px;
+    background-color: #222;
+    color: var(--color-white);
+    cursor: pointer;
+}
+
+#register button:hover{
+    background-color: var(--color-white);
+    color: var(--color-black);
+    transition: 0.25s;
+}
+
+/* --------------------------------- PROFILE -------------------------------- */
+
+.profile__name{
+    font-size: 4rem;
+    text-align: center;
+}
+
+.cart__list{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    height: 60vh;
+    text-align: center;
+    background-color: var(--color-black);
+    overflow: hidden;
+}
+
+.cart__list h3{
+    font-size: 3rem;
+    margin: 0.5rem;
+    color: white;
+}
+
+.product__list{
+    height: 100%;
+    width: 100%;
+}
+
+.product__item{
+    color: var(--color-black);
+    list-style: none;
+    font-size: 2rem;
+    margin: 0.25rem;
+    padding: 0.5rem;
+    background-color: var(--color-white);
 }

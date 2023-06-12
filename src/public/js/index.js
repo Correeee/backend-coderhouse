@@ -39,3 +39,5 @@ socketClient.on('arrayNewProduct', (lastProduct) => {
     list.appendChild(li)
 })
 
+
+

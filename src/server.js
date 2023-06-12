@@ -1,18 +1,19 @@
 import express from "express";
-import routerProducts from "./routes/ProductManagerRouter.js";
-import routerCart from "./routes/CartRouter.js";
+// import routerProducts from "./routes/ProductManagerRouter.js";
+// import routerCart from "./routes/CartRouter.js";
 import morgan from "morgan";
 import routerViews from "./routes/viewsRouter.js";
 import Handlebars from "express-handlebars";
 import { __dirname } from "./path.js";
 import { Server } from "socket.io";
-import ProductManager from "./manager/ProductManager.js";
+// import ProductManager from "./manager/ProductManager.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import routerProductsMongoose from "./routes/productRouterMongoose.js";
 import routerCartMongoose from "./routes/cartRouterMongoose.js";
 import './db/db.js'
 import messageRouter from "./routes/messageRouterMongoose.js";
 import ProductsManagerMongoose from "./daos/mongoose/productDao.js";
+import routerUsersMongoose from "./routes/usersRouterMongoose.js";
 
 const app = express()
 
@@ -44,6 +45,7 @@ app.use('/products', routerProductsMongoose);
 app.use('/carts', routerCartMongoose);
 app.use('/', routerViews)
 app.use('/messages', messageRouter)
+app.use('/users', routerUsersMongoose)
 
 /* --------------------------------- LISTEN --------------------------------- */
 const PORT = 8080;

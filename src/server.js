@@ -17,11 +17,27 @@ import routerUsersMongoose from "./routes/usersRouterMongoose.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import UserManagerMongoose from "./daos/mongoose/userDao.js";
 
-const app = express()
-
+const storeOptions = {
+    store: new MongoStore({
+        mongoUrl: "mongodb+srv://Admin:admin123@backendcoderhouse.nugwvm4.mongodb.net/ecommerce?retryWrites=true&w=majority",
+        // crypto: {
+        //     secret: '1234'
+        // },
+        //autoRemoveInterval: 15,
+        ttl: 10,
+    }),
+    secret: '12345',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 10000
+    }
+}
 
 /* --------------------------------- EXPRESS -------------------------------- */
+const app = express()
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,6 +45,7 @@ app.use(morgan('dev'))
 app.use(errorHandler)
 app.use(express.static(__dirname + '/public'))
 app.use(cookieParser())
+app.use(session(storeOptions))
 
 /* ------------------------------- HANDLEBARS ------------------------------- */
 
@@ -57,32 +74,14 @@ const httpServer = app.listen(PORT, () => {
     console.log(`Servidor en puerto ${PORT}`)
 })
 
-/* --------------------------------- SESSION -------------------------------- */
-
-const storeOptions= {
-    store: MongoStore.create({
-        mongoUrl: "mongodb+srv://Admin:admin123@backendcoderhouse.nugwvm4.mongodb.net/ecommerce?retryWrites=true&w=majority",
-        crypto: {
-            secret: '123456'
-        },
-        autoRemove: 'interval',
-        ttl: 180
-    }),
-    secret: '1234',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        maxAge: 18000
-    }
-}
-
-app.use(session(storeOptions))
 
 /* --------------------------------- SOCKET --------------------------------- */
 
 const socketServer = new Server(httpServer)
 
 const productsManagerMongoose = new ProductsManagerMongoose()
+
+const userManagerMongoose = new UserManagerMongoose()
 
 socketServer.on('connection', async (socket) => {
     console.log('Usuario conectado:', socket.id)
@@ -93,4 +92,5 @@ socketServer.on('connection', async (socket) => {
         await productsManagerMongoose.createProduct(lastProduct)
         socketServer.emit('arrayNewProduct', (lastProduct))
     })
+
 })

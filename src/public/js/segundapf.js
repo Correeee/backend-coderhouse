@@ -1,6 +1,7 @@
 const socketClient = io();
 
 const welcome = document.getElementById('user-name')
+
 // welcome.innerText = `Bienvenido/a ${userFirstName}`
 
 const list = document.getElementById('product-list')
@@ -15,3 +16,4 @@ socketClient.on('arrayProducts', (arrayProducts) => {
     })
 
 })
+

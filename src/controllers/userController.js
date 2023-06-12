@@ -25,8 +25,13 @@ export const loginUserController = async (req, res, next) => {
         const loginUser = await userManager.loginUser(user)
 
         if (loginUser) {
+            console.log(`Usuario ${loginUser[0].email} logueado con éxito.`)
+            
+            req.session.user = loginUser[0].firstName + " " + loginUser[0].lastName;
+            req.session.email = loginUser[0].email;
+            req.session.admin = loginUser[0].role == 'user' ? false : true;
+
             res.redirect('/profile')
-            console.log(`Usuario ${user.email} logueado con éxito.`)
         } else {
             res.redirect('/errorLogin')
             console.log('El usuario no puede ser logueado.')

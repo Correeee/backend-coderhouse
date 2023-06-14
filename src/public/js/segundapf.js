@@ -1,13 +1,25 @@
 const socketClient = io();
 
 const welcome = document.getElementById('user-name')
+const role = document.getElementById('role')
 
-// welcome.innerText = `Bienvenido/a ${userFirstName}`
+const userData = fetch('/users/profile')
+    .then(res => res.json())
+    .then(data => {
+        welcome.innerText = data.email;
+        role.innerText = data.role.toUpperCase();
+    })
+    .catch((error) => {
+        welcome.innerText = '-';
+        role.innerText = '-';
+        console.log(error)
+    })
+
 
 const list = document.getElementById('product-list')
 
 socketClient.on('arrayProducts', (arrayProducts) => {
-    console.log(arrayProducts.docs)
+
     arrayProducts.docs.map(producto => {
         let li = document.createElement('li')
         li.classList.add('product__item')
@@ -15,5 +27,14 @@ socketClient.on('arrayProducts', (arrayProducts) => {
         list.appendChild(li)
     })
 
+
 })
+
+
+
+
+
+
+
+
 

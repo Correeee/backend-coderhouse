@@ -26,12 +26,14 @@ export const loginUserController = async (req, res, next) => {
 
         if (loginUser) {
             console.log(`Usuario ${loginUser[0].email} logueado con éxito.`)
-            
+
             req.session.user = loginUser[0].firstName + " " + loginUser[0].lastName;
             req.session.email = loginUser[0].email;
+            req.session.role = loginUser[0].role
             req.session.admin = loginUser[0].role == 'user' ? false : true;
 
             res.redirect('/profile')
+
         } else {
             res.redirect('/errorLogin')
             console.log('El usuario no puede ser logueado.')
@@ -39,4 +41,24 @@ export const loginUserController = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
+}
+
+export const profileInfoController = (req, res) => {
+
+    const userData = {
+        email: req.session.email,
+        role: req.session.role,
+        admin: req.session.admin
+    }
+
+    res.json(userData)
+}
+
+export const logoutController = (req, res) => {
+
+    req.session.destroy((err) => {
+        if (!err) res.redirect('/login');
+        else res.send({ status: 'Logout ERROR', body: err });
+    });
+
 }

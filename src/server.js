@@ -26,13 +26,13 @@ const storeOptions = {
         //     secret: '1234'
         // },
         //autoRemoveInterval: 15,
-        ttl: 10,
+        // ttl: 18,
     }),
     secret: '12345',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 10000
+        maxAge: 1800000
     }
 }
 
@@ -92,5 +92,6 @@ socketServer.on('connection', async (socket) => {
         await productsManagerMongoose.createProduct(lastProduct)
         socketServer.emit('arrayNewProduct', (lastProduct))
     })
+
 
 })

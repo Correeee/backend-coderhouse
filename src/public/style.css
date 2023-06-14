@@ -177,6 +177,7 @@ input[type=number]::-webkit-outer-spin-button {
 .profile__name{
     font-size: 4rem;
     text-align: center;
+    margin: 0.5rem;
 }
 
 .products__list{
@@ -208,4 +209,46 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0.25rem;
     padding: 0.5rem;
     background-color: var(--color-white);
+}
+
+.div__btns{
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+}
+
+.btn__back{
+    background-color: var(--color-black);
+    color: white;
+    width: 15rem;
+    height: 5rem;
+    font-weight: bold;
+    text-align: center;
+    font-size: 2rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn__back:hover{
+    background-color: var(--color-white);
+    color: var(--color-black);
+    transition: 0.25s;
+    transform: scale(1.25);
+}
+
+.div__profile{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.div__profile button {
+    margin: 1.5rem 0;
+    background-color: #e63946;
+}
+
+span{
+    color: #e63946;
 }

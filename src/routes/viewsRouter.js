@@ -14,6 +14,10 @@ const router = Router();
 //     }
 // })
 
+router.get('/', (req, res) =>{
+    res.render('login')
+})
+
 router.get('/realtime', (req, res) => {
     res.render('realtime')
 })

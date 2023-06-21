@@ -25,12 +25,10 @@ export const loginUserController = async (req, res, next) => {
         const loginUser = await userManager.loginUser(user)
 
         if (loginUser) {
-            console.log(`Usuario ${loginUser[0].email} logueado con éxito.`)
-
-            req.session.user = loginUser[0].firstName + " " + loginUser[0].lastName;
-            req.session.email = loginUser[0].email;
-            req.session.role = loginUser[0].role
-            req.session.admin = loginUser[0].role == 'user' ? false : true;
+            req.session.user = loginUser.firstName + " " + loginUser.lastName;
+            req.session.email = loginUser.email;
+            req.session.role = loginUser.role
+            req.session.admin = loginUser.role == 'user' ? false : true;
 
             res.redirect('/profile')
 
@@ -61,4 +59,50 @@ export const logoutController = (req, res) => {
         else res.send({ status: 'Logout ERROR', body: err });
     });
 
+}
+
+export const registerResponse = (req, res, next) => {
+    try {
+        res.redirect('/profile')
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const loginResponse = async (req, res, next) => {
+    try {
+        const user = req.body
+        const loginUser = await userManager.loginUser(user)
+
+        if (loginUser) {
+            req.session.user = loginUser.firstName + " " + loginUser.lastName;
+            req.session.email = loginUser.email;
+            req.session.role = loginUser.role
+            req.session.admin = loginUser.role == 'user' ? false : true;
+
+            res.redirect('/profile')
+        } else {
+            res.redirect('/errorLogin')
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const githubResponse = async (req, res, next) => {
+    try {
+        const { firstName, lastName, email, role } = req.user;
+            res.json({
+                msg: 'Register/Login Github OK',
+                session: req.session,
+                userData: {
+                    firstName,
+                    lastName,
+                    email,
+                    role
+                }
+            })
+    } catch (error) {
+        next(error);
+    }
 }

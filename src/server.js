@@ -18,6 +18,9 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import UserManagerMongoose from "./daos/mongoose/userDao.js";
+import passport from "passport";
+import './passport/github.js'
+import './passport/local.js'
 
 const storeOptions = {
     store: new MongoStore({
@@ -46,6 +49,9 @@ app.use(errorHandler)
 app.use(express.static(__dirname + '/public'))
 app.use(cookieParser())
 app.use(session(storeOptions))
+app.use(passport.initialize())
+app.use(passport.session())
+
 
 /* ------------------------------- HANDLEBARS ------------------------------- */
 

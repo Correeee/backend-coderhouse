@@ -104,13 +104,20 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0;
 }
 
-#login{
+.div__login{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 60vh;
     background-color: #222;
+}
+
+#login{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 #login input{
@@ -120,8 +127,12 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 #login button{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
     margin: 1rem;
-    width: 15rem;
+    width: 30rem;
     height: 5rem;
     font-weight: bold;
     font-size: 2rem;
@@ -136,6 +147,36 @@ input[type=number]::-webkit-outer-spin-button {
     background-color: var(--color-white);
     color: var(--color-black);
     transition: 0.25s;
+}
+
+#loginGithub button{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 1rem;
+    width: 30rem;
+    height: 5rem;
+    font-weight: bold;
+    font-size: 2rem;
+    border: 1px solid var(--color-white);
+    border-radius: 5px;
+    background-color: #E34C26;
+    color: var(--color-white);
+    cursor: pointer;
+}
+
+#loginGithub button:hover{
+    background-color: var(--color-white);
+    color: var(--color-black);
+    transition: 0.25s;
+}
+
+#img__github{
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    border: 2px solid orange;
 }
 
 #register{

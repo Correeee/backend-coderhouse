@@ -42,6 +42,10 @@ router.get('/errorLogin', (req, res) =>{
     res.render('errorLogin')
 })
 
+router.get('/profileGithub', (req, res) =>{
+    res.render('profileGithub')
+})
+
 
 
 export default router;

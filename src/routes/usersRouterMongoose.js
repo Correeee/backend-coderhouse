@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { createUserController, githubResponse, loginResponse, loginUserController, logoutController, profileInfoController, registerResponse } from "../controllers/userController.js";
 import passport from "passport";
+import { frontResponseGithub } from "../passport/github.js";
+
 
 const router = Router()
 

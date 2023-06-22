@@ -27,3 +27,9 @@ const registerOrLogin = async(accessToken, refreshToken, profile, done) =>{
 }
 
 passport.use('githubPassport', new GithubStrategy(strategyOptions, registerOrLogin));
+
+export const frontResponseGithub = {
+    failureRedirect: '/errorLogin',
+    successRedirect: '/profile',
+    passReqToCallback: true,
+}

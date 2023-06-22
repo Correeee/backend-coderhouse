@@ -6,6 +6,7 @@ const role = document.getElementById('role')
 const userData = fetch('/users/profile')
     .then(res => res.json())
     .then(data => {
+        console.log(data)
         welcome.innerText = data.email;
         role.innerText = data.role.toUpperCase();
     })

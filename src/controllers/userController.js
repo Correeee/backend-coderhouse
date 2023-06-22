@@ -92,17 +92,21 @@ export const loginResponse = async (req, res, next) => {
 export const githubResponse = async (req, res, next) => {
     try {
         const { firstName, lastName, email, role } = req.user;
-            res.json({
-                msg: 'Register/Login Github OK',
-                session: req.session,
-                userData: {
-                    firstName,
-                    lastName,
-                    email,
-                    role
-                }
-            })
+
+        // res.json({
+        //     msg: 'Register/Login Github OK',
+        //     session: req.session,
+        //     userData: {
+        //         firstName,
+        //         lastName,
+        //         email,
+        //         role
+        //     }
+        // })
+
+        res.redirect('/profileGithub')
     } catch (error) {
         next(error);
     }
 }
+

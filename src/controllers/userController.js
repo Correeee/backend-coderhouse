@@ -1,19 +1,26 @@
 import UserManagerMongoose from "../daos/mongoose/userDao.js";
+import { generateToken } from "../jwt/auth.js";
 
 const userManager = new UserManagerMongoose()
 
 export const createUserController = async (req, res, next) => {
     try {
-        const user = req.body
+        const { firstName, lastName, email, age, password } = req.body
+        const userExist = await userManager.getByEmail(email)
+
+        if (userExist) return res.status(401).json({ msg: 'User already exist.' })
+
+        const user = { firstName, lastName, email, age, password }
+
         const newUser = await userManager.createUser(user)
 
-        if (newUser) {
-            res.redirect('/profile')
-            console.log(`Usuario ${user.email} creado con éxito.`)
-        } else {
-            res.redirect('/errorRegister')
-            console.log('No se pudo crear el usuario.')
-        }
+        const token = generateToken(newUser)
+
+        res.json({
+            msg: 'Register ok',
+            token
+        })
+
     } catch (error) {
         next(error)
     }
@@ -21,20 +28,18 @@ export const createUserController = async (req, res, next) => {
 
 export const loginUserController = async (req, res, next) => {
     try {
-        const user = req.body
+        const { email, password } = req.body
+        const user = { email, password }
+
         const loginUser = await userManager.loginUser(user)
+        console.log('USER', loginUser._id)
+        if(!loginUser){
+            return res.json({msg: 'Invalid credentials'})
+        }else{
+            const accessToken = generateToken(loginUser)
+            console.log(accessToken)
 
-        if (loginUser) {
-            req.session.user = loginUser.firstName + " " + loginUser.lastName;
-            req.session.email = loginUser.email;
-            req.session.role = loginUser.role
-            req.session.admin = loginUser.role == 'user' ? false : true;
-
-            res.redirect('/profile')
-
-        } else {
-            res.redirect('/errorLogin')
-            console.log('El usuario no puede ser logueado.')
+            res.header('authorization', accessToken).json({msg: 'Login OK', accessToken})
         }
     } catch (error) {
         next(error)

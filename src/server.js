@@ -21,10 +21,11 @@ import UserManagerMongoose from "./daos/mongoose/userDao.js";
 import passport from "passport";
 import './passport/github.js'
 import './passport/local.js'
+import 'dotenv/config'
 
 const storeOptions = {
     store: new MongoStore({
-        mongoUrl: "mongodb+srv://Admin:admin123@backendcoderhouse.nugwvm4.mongodb.net/ecommerce?retryWrites=true&w=majority",
+        mongoUrl: process.env.MONGO_ATLAS_URL,
         // crypto: {
         //     secret: '1234'
         // },
@@ -75,7 +76,8 @@ app.use('/messages', messageRouter)
 app.use('/users', routerUsersMongoose)
 
 /* --------------------------------- LISTEN --------------------------------- */
-const PORT = 8080;
+const PORT = process.env.PORT || 8080
+
 const httpServer = app.listen(PORT, () => {
     console.log(`Servidor en puerto ${PORT}`)
 })

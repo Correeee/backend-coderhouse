@@ -22,6 +22,7 @@ import passport from "passport";
 import './passport/github.js'
 import './passport/local.js'
 import 'dotenv/config'
+import routerEmail from "./routes/emailRouter.js";
 
 const storeOptions = {
     store: new MongoStore({
@@ -53,7 +54,6 @@ app.use(session(storeOptions))
 app.use(passport.initialize())
 app.use(passport.session())
 
-
 /* ------------------------------- HANDLEBARS ------------------------------- */
 
 app.engine('handlebars', Handlebars.engine());
@@ -74,6 +74,7 @@ app.use('/carts', routerCartMongoose);
 app.use('/', routerViews)
 app.use('/messages', messageRouter)
 app.use('/users', routerUsersMongoose)
+app.use('/email', routerEmail)
 
 /* --------------------------------- LISTEN --------------------------------- */
 const PORT = process.env.PORT || 8080
@@ -81,7 +82,6 @@ const PORT = process.env.PORT || 8080
 const httpServer = app.listen(PORT, () => {
     console.log(`Servidor en puerto ${PORT}`)
 })
-
 
 /* --------------------------------- SOCKET --------------------------------- */
 

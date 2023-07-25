@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import UserManagerMongoose from "../daos/mongoose/userDao.js";
 import UserResponse from "../dtos/users/userResponse.js";
+import cookieParser from "cookie-parser";
+
 
 const userDao = new UserManagerMongoose()
 
@@ -14,7 +16,6 @@ export const generateToken = (user) => {
         lastName: user.lastName,
         email: user.email,
         age: user.age,
-        password: user.password,
         role: user.role
     }
 
@@ -22,12 +23,13 @@ export const generateToken = (user) => {
         expiresIn: '30m'
     })
 
+
     return token
 }
 
 export const checkAuth = async (req, res, next) => {
     try {
-        const authHeader = req.headers['authorization'];
+        const authHeader = req.headers['authorization'] || req.headers.authorization;
 
         if (!authHeader) {
             return res.status(401).json({ msg: 'Unauthorized AUTH HEADER' })
@@ -36,13 +38,14 @@ export const checkAuth = async (req, res, next) => {
         const token = authHeader.split(' ')[1];
 
         const decodeToken = jwt.verify(token, PRIVATE_KEY)
-        // console.log('DECODE', decodeToken)
+
         const user = await userDao.getById(decodeToken.id)
         if (!user) {
             return res.status(401).json({ msg: 'Unauthorized USER' })
         }
 
         req.user = new UserResponse(user);
+        
         next()
     } catch (error) {
         console.log(error)

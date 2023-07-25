@@ -1,6 +1,7 @@
 import CartManagerMongoose from "../daos/mongoose/cartDao.js";
 import ProductsManagerMongoose from '../daos/mongoose/productDao.js'
 import TicketManagerMongoose from "../daos/mongoose/ticketDao.js";
+import { checkAuth } from "../jwt/auth.js";
 import { getProductsByIdController } from "./productsController.js";
 
 const cartManager = new CartManagerMongoose()
@@ -169,7 +170,7 @@ export const finalizePurchaseController = async (req, res, next) => {
                     if (prod.quantity > InStock[i].stock) {
                         return {
                             quantity: prod.quantity,
-                            product:{
+                            product: {
                                 _id: prod._id,
                                 title: prod.title,
                                 description: prod.description,
@@ -190,7 +191,6 @@ export const finalizePurchaseController = async (req, res, next) => {
             const prices = conStock.map(prod => prod.quantity * prod.price) // CANTIDAD X PRECIO
             const amountCart = prices.reduce((a, b) => a + b, 0) // PRECIO FINAL DE COMPRA
 
-
             if (conStock.length) {
 
                 conStock.map(async (prod) => {
@@ -209,21 +209,22 @@ export const finalizePurchaseController = async (req, res, next) => {
 
                 })
 
+                await checkAuth(req)
                 const response = await ticketManager.createTicket({
                     code: await ticketManager.createCode(),
                     purchaseDatatime: new Date().toLocaleString(),
                     amount: amountCart,
-                    purchaser: 'Fulanito'
+                    purchaser: `${req.user.firstName} ${req.user.lastName}`
                 })
 
                 if (sinStock.length) {
-                    
                     await cartManager.updateCartProductsByArray(cid, sinStock)
-
                     res.json({
                         ProductosSinStock: sinStock
                     })
                 } else {
+                    await cartManager.updateCartProductsByArray(cid, sinStock)
+
                     res.json({
                         Ticket: response
                     })

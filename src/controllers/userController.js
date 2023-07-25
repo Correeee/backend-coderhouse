@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import UserManagerMongoose from "../daos/mongoose/userDao.js";
 import { generateToken } from "../jwt/auth.js";
 
@@ -32,13 +33,11 @@ export const loginUserController = async (req, res, next) => {
         const user = { email, password }
 
         const loginUser = await userManager.loginUser(user)
-        console.log('USER', loginUser._id)
+
         if(!loginUser){
             return res.json({msg: 'Invalid credentials'})
         }else{
             const accessToken = generateToken(loginUser)
-            console.log(accessToken)
-
             res.header('authorization', accessToken).json({msg: 'Login OK', accessToken})
         }
     } catch (error) {
@@ -92,6 +91,7 @@ export const loginResponse = async (req, res, next) => {
                 role: req.session.role,
                 admin: req.session.admin
             })
+
         } else {
             res.redirect('/errorLogin')
         }

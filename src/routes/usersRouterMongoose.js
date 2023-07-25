@@ -3,6 +3,7 @@ import { createUserController, githubResponse, loginResponse, loginUserControlle
 import passport from "passport";
 import { frontResponseGithub } from "../passport/github.js";
 import { checkAuth } from "../jwt/auth.js";
+import { isAdminHandler } from "../middlewares/isAdminHandler.js";
 
 
 const router = Router()
@@ -10,7 +11,7 @@ const router = Router()
 /* -------------------------------- PASSPORT -------------------------------- */
 
 router.post('/register', passport.authenticate('register'), registerResponse)
-router.post('/login', passport.authenticate('login', frontResponseGithub), loginResponse)
+router.post('/login', passport.authenticate('login'), loginResponse)
 router.post('/logout', logoutController)
 router.get('/profile', profileInfoController)
 
@@ -23,13 +24,12 @@ router.post('/registerJWT', createUserController)
 router.post('/loginJWT', loginUserController)
 router.get('/current', checkAuth, (req, res) => {
 
-    const { id, firstName, lastName, email, age, password, role } = req.user
-    const user = { id, firstName, lastName, email, age, password, role }
-
     res.json({
         status: 'Sucess',
-        ...user
+        ...req.user
     })
+
 })
+
 
 export default router;

@@ -1,8 +1,11 @@
 import CartManagerMongoose from "../daos/mongoose/cartDao.js";
 import ProductsManagerMongoose from '../daos/mongoose/productDao.js'
+import TicketManagerMongoose from "../daos/mongoose/ticketDao.js";
+import { getProductsByIdController } from "./productsController.js";
 
 const cartManager = new CartManagerMongoose()
 const productManager = new ProductsManagerMongoose()
+const ticketManager = new TicketManagerMongoose()
 
 export const getAllCartsController = async (req, res, next) => {
     try {
@@ -15,8 +18,8 @@ export const getAllCartsController = async (req, res, next) => {
 
 export const getCartByIdController = async (req, res, next) => {
     try {
-        const { id } = req.params
-        const docs = await cartManager.getCartById(id)
+        const { cid } = req.params
+        const docs = await cartManager.getCartById(cid)
         if (!docs) {
             throw new Error('No existe este carrito.')
         } else {
@@ -119,10 +122,91 @@ export const changeQuantityController = async (req, res, next) => {
 
         const updatedCartProduct = await cartManager.changeQuantity(cid, pid, Number(quantity))
 
-        if(!updatedCartProduct){
-            throw new Error (`No se pudo actualizar la cantidad de: ${quantity} en el Producto: ${pid} del Carrito: ${cid}.`)
-        }else{
+        if (!updatedCartProduct) {
+            throw new Error(`No se pudo actualizar la cantidad de: ${quantity} en el Producto: ${pid} del Carrito: ${cid}.`)
+        } else {
             res.send(`Producto: ${pid} del Carrito: ${cid} actualizado en la Cantidad de: ${quantity}.`)
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const finalizePurchaseController = async (req, res, next) => {
+    try {
+
+        const { cid } = req.params
+        const cart = await cartManager.getCartById(cid)
+
+        if (cart.products.length) { //PRODUCTOS DEL CARRITO: ID Y CANTIDAD.
+            const productsID = cart.products.map(prod => {
+                return {
+                    id: prod.product._id,
+                    quantity: prod.quantity
+                }
+            })
+
+            const InStock = await Promise.all(productsID.map(async (prodCart) => {
+                return await productManager.getProductById(prodCart.id);
+            }));
+
+            const productsInStock = InStock.map(prod => { //PRODUCTOS DE STOCK: ID Y STOCK
+                return {
+                    id: prod._id,
+                    stock: prod.stock
+                }
+            })
+
+
+            const comprobarStock = productsID.map((prod, i) => {
+                if (prod.id, productsInStock[i].id) {
+                    if (prod.quantity <= productsInStock[i].stock) {
+                        return true
+                    } else {
+                        false
+                    }
+                }
+            })
+            const StockOK = comprobarStock.every(state => state === true)
+
+            const prices = cart.products.map(prod => prod.quantity * prod.product.price)
+            const amountCart = prices.reduce((a, b) => a + b, 0)
+
+
+            if (StockOK) {
+
+                productsID.map(async (prod) => {
+                    const product = await productManager.getProductById(prod.id)
+                    const { title, description, category, code, price, thumbnail, stock } = product
+                    const newProduct = {
+                        title, 
+                        description, 
+                        category, 
+                        code, 
+                        price, 
+                        thumbnail, 
+                        stock: stock - prod.quantity
+                    }
+                    await productManager.updateProduct(prod.id, newProduct)
+
+                })
+
+                const response = await ticketManager.createTicket({
+                    code: await ticketManager.createCode(),
+                    purchaseDatatime: new Date().toLocaleString(),
+                    amount: amountCart,
+                    purchaser: 'Fulanito'
+                })
+
+                res.json(response)
+
+            } else {
+                res.send('Stock insuficiente.')
+                return
+            }
+
+        } else {
+            res.send('El carrito no existe y/o está vacío.')
         }
     } catch (error) {
         next(error)

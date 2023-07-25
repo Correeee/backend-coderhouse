@@ -25,6 +25,7 @@ const signup = async (req, email, password, done) => {
 const login = async (req, email, password, done) => {
     const user = { email, password };
     const userLogin = await userDao.loginUser(user);
+    console.log(userLogin)
     if (!userLogin) return done(null, false);
     return done(null, userLogin);
 };
@@ -34,6 +35,7 @@ const loginStrategy = new LocalStrategy(strategyOptions, login);
 
 passport.use('register', signupStrategy);
 passport.use('login', loginStrategy);
+
 
 passport.serializeUser((user, done)=>{
     done(null, user._id);

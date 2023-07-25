@@ -68,7 +68,7 @@ export const logoutController = (req, res) => {
 
 export const registerResponse = (req, res, next) => {
     try {
-        res.redirect('/profile')
+        res.send(req.user)
     } catch (error) {
         next(error)
     }
@@ -77,6 +77,7 @@ export const registerResponse = (req, res, next) => {
 export const loginResponse = async (req, res, next) => {
     try {
         const user = req.body
+
         const loginUser = await userManager.loginUser(user)
 
         if (loginUser) {
@@ -85,7 +86,12 @@ export const loginResponse = async (req, res, next) => {
             req.session.role = loginUser.role
             req.session.admin = loginUser.role == 'user' ? false : true;
 
-            res.redirect('/profile')
+            res.send({
+                user: req.session.user,
+                email: req.session.email,
+                role: req.session.role,
+                admin: req.session.admin
+            })
         } else {
             res.redirect('/errorLogin')
         }

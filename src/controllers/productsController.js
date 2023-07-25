@@ -1,5 +1,6 @@
 import ProductsManagerMongoose from "../daos/mongoose/productDao.js";
 
+
 const productManager = new ProductsManagerMongoose()
 
 export const getAllController = async (req, res, next) => {
@@ -44,17 +45,17 @@ export const createProductController = async (req, res, next) => {
     try {
         const { title, description, category, code, price, thumbnail, stock } = req.body;
 
-        const newProduct = await productManager.createProduct({
-            title,
-            description,
-            category,
-            code,
-            price,
-            thumbnail,
-            stock
-        });
+        // const newProduct = await productManager.createProduct({
+        //     title,
+        //     description,
+        //     category,
+        //     code,
+        //     price,
+        //     thumbnail,
+        //     stock
+        // });
 
-        res.json(newProduct)
+        // res.json(newProduct)
 
     } catch (error) {
         next(error)

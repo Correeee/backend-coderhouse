@@ -83,6 +83,7 @@ const httpServer = app.listen(PORT, () => {
     console.log(`Servidor en puerto ${PORT}`)
 })
 
+
 /* --------------------------------- SOCKET --------------------------------- */
 
 const socketServer = new Server(httpServer)

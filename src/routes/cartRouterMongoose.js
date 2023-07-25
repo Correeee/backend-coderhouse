@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { addToCartController, changeQuantityController, createCartController, deleteProductInCartController, emptyCartcontroller, getAllCartsController, getCartByIdController, updateCartProductsByArrayController } from "../controllers/cartController.js";
+import { addToCartController, changeQuantityController, createCartController, deleteProductInCartController, emptyCartcontroller, finalizePurchaseController, getAllCartsController, getCartByIdController, updateCartProductsByArrayController } from "../controllers/cartController.js";
 
 const routerCartMongoose = Router()
 
 routerCartMongoose.get('/', getAllCartsController) //LIST TODOS LOS CARRITOS - OK
-routerCartMongoose.get('/:id', getCartByIdController) //OBTIENE UN CARRITO POR ID - OK
+routerCartMongoose.get('/:cid', getCartByIdController) //OBTIENE UN CARRITO POR ID - OK
 routerCartMongoose.post('/', createCartController) //CREA UN CARRITO - OK
 routerCartMongoose.put('/:cid/:pid', addToCartController) //AGREGA UN PRODUCTO - OK
 routerCartMongoose.delete('/:cid', emptyCartcontroller) //VACIA EL CARRITO - OK
@@ -13,6 +13,7 @@ routerCartMongoose.put('/:cid/products/:pid', changeQuantityController) // CAMBI
 routerCartMongoose.put('/:cid', updateCartProductsByArrayController) //ACTUALIZAR PRODUCTS CON UN ARRAY - OK
 
 
+routerCartMongoose.post('/:cid/purchase',  finalizePurchaseController) //FINALIZAR COMPRA 
 
 
 

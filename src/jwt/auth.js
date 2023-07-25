@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import UserManagerMongoose from "../daos/mongoose/userDao.js";
+import UserResponse from "../dtos/users/userResponse.js";
 
 const userDao = new UserManagerMongoose()
 
@@ -18,7 +19,7 @@ export const generateToken = (user) => {
     }
 
     const token = jwt.sign(payload, PRIVATE_KEY, {
-        expiresIn: '15m'
+        expiresIn: '30m'
     })
 
     return token
@@ -35,15 +36,16 @@ export const checkAuth = async (req, res, next) => {
         const token = authHeader.split(' ')[1];
 
         const decodeToken = jwt.verify(token, PRIVATE_KEY)
-        console.log('DECODE', decodeToken)
+        // console.log('DECODE', decodeToken)
         const user = await userDao.getById(decodeToken.id)
         if (!user) {
             return res.status(401).json({ msg: 'Unauthorized USER' })
         }
 
-        req.user = user;
+        req.user = new UserResponse(user);
         next()
     } catch (error) {
         console.log(error)
     }
 }
+

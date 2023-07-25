@@ -167,15 +167,14 @@ export const finalizePurchaseController = async (req, res, next) => {
                     }
                 }
             })
-            const StockOK = comprobarStock.every(state => state === true)
+            const StockOK = comprobarStock.every(state => state === true) //COMPRUEBA SI TODOS LOS PRODUCTOS TIENEN EL STOCK SUFICIENTE
 
-            const prices = cart.products.map(prod => prod.quantity * prod.product.price)
-            const amountCart = prices.reduce((a, b) => a + b, 0)
-
+            const prices = cart.products.map(prod => prod.quantity * prod.product.price) // CANTIDAD X PRECIO
+            const amountCart = prices.reduce((a, b) => a + b, 0) // PRECIO FINAL DE COMPRA
 
             if (StockOK) {
 
-                productsID.map(async (prod) => {
+                productsID.map(async (prod) => { 
                     const product = await productManager.getProductById(prod.id)
                     const { title, description, category, code, price, thumbnail, stock } = product
                     const newProduct = {

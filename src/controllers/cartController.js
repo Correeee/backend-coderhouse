@@ -141,52 +141,71 @@ export const finalizePurchaseController = async (req, res, next) => {
         if (cart.products.length) { //PRODUCTOS DEL CARRITO: ID Y CANTIDAD.
             const productsID = cart.products.map(prod => {
                 return {
-                    id: prod.product._id,
+                    ...prod.product,
                     quantity: prod.quantity
                 }
             })
 
+
             const InStock = await Promise.all(productsID.map(async (prodCart) => {
-                return await productManager.getProductById(prodCart.id);
+                return await productManager.getProductById(prodCart._id);
             }));
 
-            const productsInStock = InStock.map(prod => { //PRODUCTOS DE STOCK: ID Y STOCK
-                return {
-                    id: prod._id,
-                    stock: prod.stock
-                }
-            })
 
-
-            const comprobarStock = productsID.map((prod, i) => {
-                if (prod.id, productsInStock[i].id) {
-                    if (prod.quantity <= productsInStock[i].stock) {
-                        return true
-                    } else {
-                        false
+            const conStock = productsID.map((prod, i) => { //PRODUCTOS DE CANTIDAD MENOR A STOCK.
+                if (prod._id, InStock[i]._id) {
+                    if (prod.quantity <= InStock[i].stock) {
+                        return {
+                            ...prod,
+                            price: InStock[i].price
+                        }
                     }
                 }
-            })
-            const StockOK = comprobarStock.every(state => state === true) //COMPRUEBA SI TODOS LOS PRODUCTOS TIENEN EL STOCK SUFICIENTE
+            }).filter(prod => prod != undefined)
 
-            const prices = cart.products.map(prod => prod.quantity * prod.product.price) // CANTIDAD X PRECIO
+
+            const sinStock = productsID.map((prod, i) => { //PRODUCTOS CON STOCK MENOR A LA CANTIDAD.
+                if (prod._id, InStock[i]._id) {
+                    if (prod.quantity > InStock[i].stock) {
+                        return {
+                            quantity: prod.quantity,
+                            product:{
+                                _id: prod._id,
+                                title: prod.title,
+                                description: prod.description,
+                                category: prod.category,
+                                code: prod.code,
+                                price: prod.price,
+                                thumbnail: prod.thumbnail,
+                                stock: prod.stock,
+                                createdAt: prod.createdAt,
+                                updatedAt: prod.updatedAt,
+                                __v: prod.__v
+                            }
+                        }
+                    }
+                }
+            }).filter(prod => prod != undefined)
+
+            const prices = conStock.map(prod => prod.quantity * prod.price) // CANTIDAD X PRECIO
             const amountCart = prices.reduce((a, b) => a + b, 0) // PRECIO FINAL DE COMPRA
 
-            if (StockOK) {
 
-                productsID.map(async (prod) => { 
-                    const product = await productManager.getProductById(prod.id)
+            if (conStock.length) {
+
+                conStock.map(async (prod) => {
+                    const product = await productManager.getProductById(prod._id)
                     const { title, description, category, code, price, thumbnail, stock } = product
                     const newProduct = {
-                        title, 
-                        description, 
-                        category, 
-                        code, 
-                        price, 
-                        thumbnail, 
+                        title,
+                        description,
+                        category,
+                        code,
+                        price,
+                        thumbnail,
                         stock: stock - prod.quantity
                     }
-                    await productManager.updateProduct(prod.id, newProduct)
+                    await productManager.updateProduct(prod._id, newProduct)
 
                 })
 
@@ -197,11 +216,23 @@ export const finalizePurchaseController = async (req, res, next) => {
                     purchaser: 'Fulanito'
                 })
 
-                res.json(response)
+                if (sinStock.length) {
+                    
+                    await cartManager.updateCartProductsByArray(cid, sinStock)
+
+                    res.json({
+                        ProductosSinStock: sinStock
+                    })
+                } else {
+                    res.json({
+                        Ticket: response
+                    })
+                }
 
             } else {
-                res.send('Stock insuficiente.')
-                return
+                res.json({
+                    ProductosSinStock: sinStock
+                })
             }
 
         } else {

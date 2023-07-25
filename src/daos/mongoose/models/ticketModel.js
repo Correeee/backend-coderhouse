@@ -7,8 +7,6 @@ const ticketSchema = new mongoose.Schema({
     purchaseDatatime: { type: String, required: true },
     amount: { type: Number, required: true },
     purchaser: { type: String, required: true }
-}, {
-    timestamps: true
 })
 
 export const ticketModel = mongoose.model(ticketCollection, ticketSchema);

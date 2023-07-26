@@ -137,108 +137,117 @@ export const finalizePurchaseController = async (req, res, next) => {
     try {
 
         const { cid } = req.params
-        const cart = await cartManager.getCartById(cid)
+        await checkAuth(req)
 
-        if (cart.products.length) { //PRODUCTOS DEL CARRITO: ID Y CANTIDAD.
-            const productsID = cart.products.map(prod => {
-                return {
-                    ...prod.product,
-                    quantity: prod.quantity
-                }
-            })
+        if (req.user.role == 'user') {
 
+            const cart = await cartManager.getCartById(cid)
 
-            const InStock = await Promise.all(productsID.map(async (prodCart) => {
-                return await productManager.getProductById(prodCart._id);
-            }));
-
-
-            const conStock = productsID.map((prod, i) => { //PRODUCTOS DE CANTIDAD MENOR A STOCK.
-                if (prod._id, InStock[i]._id) {
-                    if (prod.quantity <= InStock[i].stock) {
-                        return {
-                            ...prod,
-                            price: InStock[i].price
-                        }
+            if (cart.products.length) { //PRODUCTOS DEL CARRITO: ID Y CANTIDAD.
+                const productsID = cart.products.map(prod => {
+                    return {
+                        ...prod.product,
+                        quantity: prod.quantity
                     }
-                }
-            }).filter(prod => prod != undefined)
+                })
 
 
-            const sinStock = productsID.map((prod, i) => { //PRODUCTOS CON STOCK MENOR A LA CANTIDAD.
-                if (prod._id, InStock[i]._id) {
-                    if (prod.quantity > InStock[i].stock) {
-                        return {
-                            quantity: prod.quantity,
-                            product: {
-                                _id: prod._id,
-                                title: prod.title,
-                                description: prod.description,
-                                category: prod.category,
-                                code: prod.code,
-                                price: prod.price,
-                                thumbnail: prod.thumbnail,
-                                stock: prod.stock,
-                                createdAt: prod.createdAt,
-                                updatedAt: prod.updatedAt,
-                                __v: prod.__v
+                const InStock = await Promise.all(productsID.map(async (prodCart) => {
+                    return await productManager.getProductById(prodCart._id);
+                }));
+
+
+                const conStock = productsID.map((prod, i) => { //PRODUCTOS DE CANTIDAD MENOR A STOCK.
+                    if (prod._id, InStock[i]._id) {
+                        if (prod.quantity <= InStock[i].stock) {
+                            return {
+                                ...prod,
+                                price: InStock[i].price
                             }
                         }
                     }
-                }
-            }).filter(prod => prod != undefined)
+                }).filter(prod => prod != undefined)
 
-            const prices = conStock.map(prod => prod.quantity * prod.price) // CANTIDAD X PRECIO
-            const amountCart = prices.reduce((a, b) => a + b, 0) // PRECIO FINAL DE COMPRA
 
-            if (conStock.length) {
-
-                conStock.map(async (prod) => {
-                    const product = await productManager.getProductById(prod._id)
-                    const { title, description, category, code, price, thumbnail, stock } = product
-                    const newProduct = {
-                        title,
-                        description,
-                        category,
-                        code,
-                        price,
-                        thumbnail,
-                        stock: stock - prod.quantity
+                const sinStock = productsID.map((prod, i) => { //PRODUCTOS CON STOCK MENOR A LA CANTIDAD.
+                    if (prod._id, InStock[i]._id) {
+                        if (prod.quantity > InStock[i].stock) {
+                            return {
+                                quantity: prod.quantity,
+                                product: {
+                                    _id: prod._id,
+                                    title: prod.title,
+                                    description: prod.description,
+                                    category: prod.category,
+                                    code: prod.code,
+                                    price: prod.price,
+                                    thumbnail: prod.thumbnail,
+                                    stock: prod.stock,
+                                    createdAt: prod.createdAt,
+                                    updatedAt: prod.updatedAt,
+                                    __v: prod.__v
+                                }
+                            }
+                        }
                     }
-                    await productManager.updateProduct(prod._id, newProduct)
+                }).filter(prod => prod != undefined)
 
-                })
+                const prices = conStock.map(prod => prod.quantity * prod.price) // CANTIDAD X PRECIO
+                const amountCart = prices.reduce((a, b) => a + b, 0) // PRECIO FINAL DE COMPRA
 
-                await checkAuth(req)
-                const response = await ticketManager.createTicket({
-                    code: await ticketManager.createCode(),
-                    purchaseDatatime: new Date().toLocaleString(),
-                    amount: amountCart,
-                    purchaser: `${req.user.firstName} ${req.user.lastName}`
-                })
+                if (conStock.length) {
 
-                if (sinStock.length) {
-                    await cartManager.updateCartProductsByArray(cid, sinStock)
+                    conStock.map(async (prod) => {
+                        const product = await productManager.getProductById(prod._id)
+                        const { title, description, category, code, price, thumbnail, stock } = product
+                        const newProduct = {
+                            title,
+                            description,
+                            category,
+                            code,
+                            price,
+                            thumbnail,
+                            stock: stock - prod.quantity
+                        }
+                        await productManager.updateProduct(prod._id, newProduct)
+
+                    })
+
+
+                    const response = await ticketManager.createTicket({
+                        code: await ticketManager.createCode(),
+                        purchaseDatatime: new Date().toLocaleString(),
+                        amount: amountCart,
+                        purchaser: `${req.user.firstName} ${req.user.lastName}`
+                    })
+
+                    if (sinStock.length) {
+                        await cartManager.updateCartProductsByArray(cid, sinStock)
+                        res.json({
+                            ProductosSinStock: sinStock
+                        })
+                    } else {
+                        await cartManager.updateCartProductsByArray(cid, sinStock)
+
+                        res.json({
+                            Ticket: response
+                        })
+                    }
+
+                } else {
                     res.json({
                         ProductosSinStock: sinStock
-                    })
-                } else {
-                    await cartManager.updateCartProductsByArray(cid, sinStock)
-
-                    res.json({
-                        Ticket: response
                     })
                 }
 
             } else {
-                res.json({
-                    ProductosSinStock: sinStock
-                })
+                res.send('El carrito no existe y/o está vacío.')
             }
 
-        } else {
-            res.send('El carrito no existe y/o está vacío.')
+        }else{
+            res.send(`Tu rol es ${req.user.role.toUpperCase()}, por lo tanto no puedes agregar productos al carrito.`)
         }
+
     } catch (error) {
         next(error)
     }

@@ -1,4 +1,5 @@
 import ProductsManagerMongoose from "../daos/mongoose/productDao.js";
+import { checkAuth } from "../jwt/auth.js";
 
 
 const productManager = new ProductsManagerMongoose()
@@ -43,19 +44,24 @@ export const getProductsByIdController = async (req, res, next) => {
 
 export const createProductController = async (req, res, next) => {
     try {
-        const { title, description, category, code, price, thumbnail, stock } = req.body;
+        await checkAuth(req)
+        if (req.user.role == 'admin') {
+            const { title, description, category, code, price, thumbnail, stock } = req.body;
 
-        // const newProduct = await productManager.createProduct({
-        //     title,
-        //     description,
-        //     category,
-        //     code,
-        //     price,
-        //     thumbnail,
-        //     stock
-        // });
+            const newProduct = await productManager.createProduct({
+                title,
+                description,
+                category,
+                code,
+                price,
+                thumbnail,
+                stock
+            });
 
-        // res.json(newProduct)
+            res.json(newProduct)
+        } else {
+            res.send(`Tu rol es ${req.user.role.toUpperCase()}, por lo tanto no puedes crear, actualizar ni eliminar productos.`)
+        }
 
     } catch (error) {
         next(error)
@@ -64,31 +70,37 @@ export const createProductController = async (req, res, next) => {
 
 export const updateProductController = async (req, res, next) => {
     try {
+
         const { id } = req.params
         const { title, description, category, code, price, thumbnail, stock } = req.body;
+        await checkAuth(req)
 
-        const docs = await productManager.getProductById(id)
+        if (req.user.role == 'admin') {
+            const docs = await productManager.getProductById(id)
 
-        if (!docs) {
-            throw new Error('El producto NO existe y, por lo tanto, NO puede ser actualizado.')
-        }
+            if (!docs) {
+                throw new Error('El producto NO existe y, por lo tanto, NO puede ser actualizado.')
+            }
 
-        const updateProduct = await productManager.updateProduct(id, {
-            title,
-            description,
-            category,
-            code,
-            price,
-            thumbnail,
-            stock
-        });
+            const updateProduct = await productManager.updateProduct(id, {
+                title,
+                description,
+                category,
+                code,
+                price,
+                thumbnail,
+                stock
+            });
 
-        if (!updateProduct) {
-            throw new Error('No se pudo actualizar el producto.')
+            if (!updateProduct) {
+                throw new Error('No se pudo actualizar el producto.')
+            } else {
+                const finalProduct = await productManager.getProductById(id)
+                console.log('¡Producto actualizado!')
+                res.json(finalProduct)
+            }
         } else {
-            const finalProduct = await productManager.getProductById(id)
-            console.log('¡Producto actualizado!')
-            res.json(finalProduct)
+            res.send(`Tu rol es ${req.user.role.toUpperCase()}, por lo tanto no puedes crear, actualizar ni eliminar productos.`)
         }
 
     } catch (error) {
@@ -99,21 +111,27 @@ export const updateProductController = async (req, res, next) => {
 export const deleteProductController = async (req, res, next) => {
     try {
         const { id } = req.params
+        await checkAuth(req)
 
-        const productFounded = await productManager.getProductById(id)
+        if (req.user.role == 'admin') {
+            const productFounded = await productManager.getProductById(id)
 
-        if (!productFounded) {
-            throw new Error('Producto NO encontrado.')
-        }
+            if (!productFounded) {
+                throw new Error('Producto NO encontrado.')
+            }
 
-        const deleteProduct = await productManager.deleteProduct(id)
+            const deleteProduct = await productManager.deleteProduct(id)
 
-        if (!deleteProduct) {
-            throw new Error('No se pudo borrar el producto');
+            if (!deleteProduct) {
+                throw new Error('No se pudo borrar el producto');
+            } else {
+                console.log('¡Producto borrado!')
+                res.send(`¡Producto borrado: ${id}!`)
+            }
         } else {
-            console.log('¡Producto borrado!')
-            res.send(`¡Producto borrado: ${id}!`)
+            res.send(`Tu rol es ${req.user.role.toUpperCase()}, por lo tanto no puedes crear, actualizar ni eliminar productos.`)
         }
+
     } catch (error) {
         next(error)
     }

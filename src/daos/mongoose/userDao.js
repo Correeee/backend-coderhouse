@@ -21,7 +21,7 @@ export default class UserManagerMongoose {
                 return null
             }
         } catch (error) {
-            console.log(error)
+            throw new Error(error)
         }
     }
 
@@ -43,7 +43,7 @@ export default class UserManagerMongoose {
                 return null
             }
         } catch (error) {
-            console.log(error)
+            throw new Error(error)
         }
     }
 
@@ -54,7 +54,6 @@ export default class UserManagerMongoose {
                 return userExist
             } return false
         } catch (error) {
-            console.log(error)
             throw new Error(error)
         }
     }
@@ -66,7 +65,7 @@ export default class UserManagerMongoose {
                 return userExist
             } return false
         } catch (error) {
-            console.log(error)
+            throw new Error(error)
         }
     }
 

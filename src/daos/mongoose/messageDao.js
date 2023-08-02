@@ -8,7 +8,7 @@ export default class MessagesModel {
             const response = await messagesModel.create({ user: uid, message: message })
             return response
         } catch (error) {
-            console.log(error)
+            throw new Error(error)
         }
 
     }
@@ -18,7 +18,7 @@ export default class MessagesModel {
             const response = await messagesModel.find({})
             return response
         } catch (error) {
-            console.log(error)
+            throw new Error(error)
         }
     }
 }

@@ -1,5 +1,9 @@
-export const errorHandler = (error, req, res, next) =>{
-    console.log(`Error ${error.message}`);
-    const status = error.status || 400;
-    res.status(status).send(error.message)
+import { HTTPResponse } from "../httpResponse.js";
+
+const httpResponse = new HTTPResponse()
+
+export const errorHandler = (error, req, res, next) => {
+
+    return httpResponse.NotFound(res, error.message)
+
 }

@@ -15,7 +15,7 @@ export default class ProductsManagerMongoose {
             const response = await productsModel.findById(id)
             return response;
         } catch (error) {
-            console.log(error)
+            throw new Error(error)
         }
     }
 
@@ -24,7 +24,7 @@ export default class ProductsManagerMongoose {
             const response = await productsModel.create(obj);
             return response;
         } catch (error) {
-            console.log(error)
+            throw new Error(error)
         }
     }
 
@@ -33,7 +33,7 @@ export default class ProductsManagerMongoose {
             const response = await productsModel.findOneAndDelete(id)
             return response
         } catch (error) {
-            console.log(error)
+            throw new Error(error)
         }
     }
 
@@ -42,7 +42,7 @@ export default class ProductsManagerMongoose {
             const response = await productsModel.updateOne({_id: id}, obj)
             return response;
         } catch (error) {
-            console.log(error)
+            throw new Error(error)
         }
     }
 
@@ -55,7 +55,7 @@ export default class ProductsManagerMongoose {
             ])
             return response
         } catch (error) {
-            console.log(error)
+            throw new Error(error)
         }
     }
 
@@ -75,7 +75,7 @@ export default class ProductsManagerMongoose {
             ])
             return response
         } catch (error) {
-            console.log(error)
+            throw new Error(error)
         }
     }
 }

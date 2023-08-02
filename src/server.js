@@ -23,6 +23,7 @@ import './passport/github.js'
 import './passport/local.js'
 import 'dotenv/config'
 import routerEmail from "./routes/emailRouter.js";
+import routeMocking from "./routes/mockingRouter.js";
 
 const storeOptions = {
     store: new MongoStore({
@@ -47,7 +48,6 @@ const app = express()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'))
-app.use(errorHandler)
 app.use(express.static(__dirname + '/public'))
 app.use(cookieParser())
 app.use(session(storeOptions))
@@ -75,7 +75,11 @@ app.use('/', routerViews)
 app.use('/messages', messageRouter)
 app.use('/users', routerUsersMongoose)
 app.use('/email', routerEmail)
+app.use('/mocking', routeMocking)
 
+
+/* -------------------------- MANEJADOR DE ERRORES -------------------------- */
+app.use(errorHandler)
 /* --------------------------------- LISTEN --------------------------------- */
 const PORT = process.env.PORT || 8080
 

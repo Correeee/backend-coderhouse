@@ -13,7 +13,7 @@ export default class TicketManagerMongoose {
             }
 
         } catch (error) {
-            console.log(error)
+            throw new Error(error)
         }
     }
 
@@ -22,7 +22,7 @@ export default class TicketManagerMongoose {
             const response = await ticketModel.create(obj)
             return response
         } catch (error) {
-            console.log(error)
+            throw new Error(error)
         }
     }
 

@@ -8,7 +8,7 @@ export default class CartManagerMongoose {
             const response = await cartModel.find({})
             return response;
         } catch (error) {
-            console.log(error)
+            throw new Error(error.message)
         }
     }
 
@@ -17,7 +17,7 @@ export default class CartManagerMongoose {
             const response = await cartModel.create(obj);
             return response;
         } catch (error) {
-            console.log(error)
+            throw new Error(error.message)
         }
     }
 
@@ -26,7 +26,7 @@ export default class CartManagerMongoose {
             const response = await cartModel.findById(id)
             return response.populate('products');
         } catch (error) {
-            console.log(error)
+            throw new Error(error.message)
         }
     }
 
@@ -61,7 +61,7 @@ export default class CartManagerMongoose {
                 }
             }
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
         }
     }
 
@@ -96,7 +96,7 @@ export default class CartManagerMongoose {
             return updateCart
 
         } catch (error) {
-            console.log(error)
+            throw new Error(error.message)
         }
     }
 
@@ -105,7 +105,7 @@ export default class CartManagerMongoose {
             const foundedCart = await cartModel.findByIdAndUpdate(cid, { products: newArray })
             return foundedCart
         } catch (error) {
-            console.log(error)
+            throw new Error(error.message)
         }
     }
 
@@ -115,7 +115,7 @@ export default class CartManagerMongoose {
             console.log(foundedCart)
             return foundedCart
         } catch (error) {
-            console.log(error)
+            throw new Error(error.message)
         }
     }
 

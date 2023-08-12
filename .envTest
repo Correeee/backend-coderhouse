@@ -1,2 +1,9 @@
 PORT = 
 MONGO_ATLAS_URL = 
+
+HOST = 
+EMAIL = 
+PASSWORD = 
+PORT_ETHEREAL = 
+
+ENV = 'dev' o 'prod' 

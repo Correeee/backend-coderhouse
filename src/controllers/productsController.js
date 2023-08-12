@@ -1,5 +1,6 @@
 import ProductsManagerMongoose from "../daos/mongoose/productDao.js";
 import { checkAuth } from "../jwt/auth.js";
+import { logger } from "../utils/logger.js";
 
 
 const productManager = new ProductsManagerMongoose()
@@ -10,7 +11,7 @@ export const getAllController = async (req, res, next) => {
         const response = await productManager.getAllProducts(page, limit)
         const nextLink = response.hasNextPage ? `http://localhost:8080/products?page=${response.nextPage}` : null
         const prevLink = response.hasPrevPage ? `http://localhost:8080/products?page=${response.prevPage}` : null
-        console.log('¡Productos obtenidos!')
+        logger.info('¡Productos obtenidos!')
         res.json({
             results: response.docs,
             information: {
@@ -32,9 +33,10 @@ export const getProductsByIdController = async (req, res, next) => {
         const { id } = req.params
         const docs = await productManager.getProductById(id)
         if (!docs) {
+            logger.error('El producto NO existe.')
             throw new Error('El producto NO existe.')
         } else {
-            console.log('¡Producto obtenido por ID!')
+            logger.info('¡Producto obtenido por ID!')
             res.json(docs)
         }
     } catch (error) {
@@ -79,6 +81,7 @@ export const updateProductController = async (req, res, next) => {
             const docs = await productManager.getProductById(id)
 
             if (!docs) {
+                logger.error('El producto NO existe y, por lo tanto, NO puede ser actualizado.')
                 throw new Error('El producto NO existe y, por lo tanto, NO puede ser actualizado.')
             }
 
@@ -93,10 +96,11 @@ export const updateProductController = async (req, res, next) => {
             });
 
             if (!updateProduct) {
+                logger.error('No se pudo actualizar el producto.')
                 throw new Error('No se pudo actualizar el producto.')
             } else {
                 const finalProduct = await productManager.getProductById(id)
-                console.log('¡Producto actualizado!')
+                logger.info('¡Producto actualizado!')
                 res.json(finalProduct)
             }
         } else {
@@ -117,6 +121,7 @@ export const deleteProductController = async (req, res, next) => {
             const productFounded = await productManager.getProductById(id)
 
             if (!productFounded) {
+                logger.error('Producto NO encontrado.')
                 throw new Error('Producto NO encontrado.')
             }
 
@@ -125,7 +130,7 @@ export const deleteProductController = async (req, res, next) => {
             if (!deleteProduct) {
                 throw new Error('No se pudo borrar el producto');
             } else {
-                console.log('¡Producto borrado!')
+                logger.info('¡Producto borrado!')
                 res.send(`¡Producto borrado: ${id}!`)
             }
         } else {
@@ -144,6 +149,7 @@ export const categoryFilterController = async (req, res, next) => { //Agreggatio
         const categoryFilter = await productManager.categoryFilter(category)
 
         if (!categoryFilter) {
+            logger.error('La categoría no existe.')
             throw new Error('La categoría no existe')
         } else {
             res.json(categoryFilter)
@@ -161,6 +167,7 @@ export const priceFilterController = async (req, res, next) => { // Filtro por: 
         if (!minPrice) {
             const priceFilter = await productManager.priceFilter(0, maxPrice)
             if (!priceFilter) {
+                logger.error('No existen productos de ese precio.')
                 throw new Error('No existen productos de ese precio.')
             } else {
                 res.json(priceFilter)
@@ -170,6 +177,7 @@ export const priceFilterController = async (req, res, next) => { // Filtro por: 
         if (!maxPrice) {
             const priceFilter = await productManager.priceFilter(minPrice, 9999999999)
             if (!priceFilter) {
+                logger.error('No existen productos de ese precio.')
                 throw new Error('No existen productos de ese precio.')
             } else {
                 res.json(priceFilter)
@@ -178,6 +186,7 @@ export const priceFilterController = async (req, res, next) => { // Filtro por: 
         if (minPrice && maxPrice) {
             const priceFilter = await productManager.priceFilter(minPrice, maxPrice)
             if (!priceFilter) {
+                logger.error('No existen productos de ese precio.')
                 throw new Error('No existen productos de ese precio.')
             } else {
                 res.json(priceFilter)

@@ -24,6 +24,8 @@ import './passport/local.js'
 import 'dotenv/config'
 import routerEmail from "./routes/emailRouter.js";
 import routeMocking from "./routes/mockingRouter.js";
+import loggerRouter from "./routes/loggerRouter.js";
+import { logger } from "./utils/logger.js";
 
 const storeOptions = {
     store: new MongoStore({
@@ -54,6 +56,7 @@ app.use(session(storeOptions))
 app.use(passport.initialize())
 app.use(passport.session())
 
+
 /* ------------------------------- HANDLEBARS ------------------------------- */
 
 app.engine('handlebars', Handlebars.engine());
@@ -76,6 +79,7 @@ app.use('/messages', messageRouter)
 app.use('/users', routerUsersMongoose)
 app.use('/email', routerEmail)
 app.use('/mocking', routeMocking)
+app.use('/loggerTest', loggerRouter)
 
 
 /* -------------------------- MANEJADOR DE ERRORES -------------------------- */
@@ -108,3 +112,5 @@ socketServer.on('connection', async (socket) => {
 
 
 })
+
+

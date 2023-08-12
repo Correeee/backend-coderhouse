@@ -2,6 +2,7 @@ import CartManagerMongoose from "../daos/mongoose/cartDao.js";
 import ProductsManagerMongoose from '../daos/mongoose/productDao.js'
 import TicketManagerMongoose from "../daos/mongoose/ticketDao.js";
 import { checkAuth } from "../jwt/auth.js";
+import { logger } from "../utils/logger.js";
 import { getProductsByIdController } from "./productsController.js";
 
 const cartManager = new CartManagerMongoose()
@@ -22,6 +23,7 @@ export const getCartByIdController = async (req, res, next) => {
         const { cid } = req.params
         const docs = await cartManager.getCartById(cid)
         if (!docs) {
+            logger.error('No existe este carrito.')
             throw new Error('No existe este carrito.')
         } else {
             res.json(docs)
@@ -39,6 +41,7 @@ export const addToCartController = async (req, res, next) => {
         const docs = await cartManager.addToCart(cid, pid)
 
         if (!docs) {
+            logger.error('No existe este carrito.')
             throw new Error('No existe este carrito.')
         } else {
             res.json(docs)
@@ -55,6 +58,7 @@ export const createCartController = async (req, res, next) => {
         const newCart = await cartManager.createCart({})
 
         if (!newCart) {
+            logger.error('No se pudo crear el carrito.')
             throw new Error('No se pudo crear el carrito.')
         } else {
             res.json(newCart)
@@ -72,8 +76,10 @@ export const emptyCartcontroller = async (req, res, next) => {
         const emptyCart = await cartManager.emptyCart(cid)
 
         if (!emptyCart) {
+            logger.error(`No se pudo vaciar el carrito: ${cid}. `)
             throw new Error(`No se pudo vaciar el carrito: ${cid}. `)
         } else {
+            logger.info(`¡Carrito ${cid} vaciado!`)
             return res.send(`¡Carrito ${cid} vaciado!`)
         }
     } catch (error) {
@@ -88,8 +94,10 @@ export const deleteProductInCartController = async (req, res, next) => { //Borra
         const cartAndProduct = await cartManager.deleteProductInCart(cid, pid)
 
         if (!cartAndProduct) {
+            logger.error('El Producto y/o el Carrito son inexistentes.')
             throw new Error('El Producto y/o el Carrito son inexistentes.')
         } else {
+            logger.info(`¡Producto: ${pid} eliminado del Carrito: ${cid}!`)
             res.send(`¡Producto: ${pid} eliminado del Carrito: ${cid}!`)
         }
     } catch (error) {
@@ -105,8 +113,10 @@ export const updateCartProductsByArrayController = async (req, res, next) => {
             const updatedCart = await cartManager.updateCartProductsByArray(cid, newArray)
 
             if (!updatedCart) {
+                logger.errorr(`El Carrito ${cid} no pudo ser actualizado.`)
                 throw new Error(`El Carrito ${cid} no pudo ser actualizado.`)
             } else {
+                logger.info(`¡Carrito: ${cid} actualizado!`)
                 res.send(`¡Carrito: ${cid} actualizado!`)
             }
 
@@ -124,8 +134,10 @@ export const changeQuantityController = async (req, res, next) => {
         const updatedCartProduct = await cartManager.changeQuantity(cid, pid, Number(quantity))
 
         if (!updatedCartProduct) {
+            logger.error(`No se pudo actualizar la cantidad de: ${quantity} en el Producto: ${pid} del Carrito: ${cid}.`)
             throw new Error(`No se pudo actualizar la cantidad de: ${quantity} en el Producto: ${pid} del Carrito: ${cid}.`)
         } else {
+            logger.info(`Producto: ${pid} del Carrito: ${cid} actualizado en la Cantidad de: ${quantity}.`)
             res.send(`Producto: ${pid} del Carrito: ${cid} actualizado en la Cantidad de: ${quantity}.`)
         }
     } catch (error) {
@@ -241,10 +253,12 @@ export const finalizePurchaseController = async (req, res, next) => {
                 }
 
             } else {
+                logger.error('El carrito no existe y/o está vacío.')
                 res.send('El carrito no existe y/o está vacío.')
             }
 
         }else{
+            logger.error(`Tu rol es ${req.user.role.toUpperCase()}, por lo tanto no puedes agregar productos al carrito.`)
             res.send(`Tu rol es ${req.user.role.toUpperCase()}, por lo tanto no puedes agregar productos al carrito.`)
         }
 

@@ -37,8 +37,10 @@ export const addToCartController = async (req, res, next) => {
     try {
         const { cid } = req.params
         const { pid } = req.params
+        await checkAuth(req)
+        const user = req.user
 
-        const docs = await cartManager.addToCart(cid, pid)
+        const docs = await cartManager.addToCart(cid, pid, user)
 
         if (!docs) {
             logger.error('No existe este carrito.')

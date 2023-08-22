@@ -46,9 +46,9 @@ export const getProductsByIdController = async (req, res, next) => {
 
 export const createProductController = async (req, res, next) => {
     try {
-        await checkAuth(req)
-        if (req.user.role == 'admin') {
-            const { title, description, category, code, price, thumbnail, stock } = req.body;
+        if (req.user.role == 'admin' || req.user.premium == true) {
+            console.log(req.user)
+            const { title, description, category, code, price, thumbnail, stock, owner } = req.body;
 
             const newProduct = await productManager.createProduct({
                 title,
@@ -57,12 +57,13 @@ export const createProductController = async (req, res, next) => {
                 code,
                 price,
                 thumbnail,
-                stock
+                stock,
+                owner: req.user.email ? req.user.email : 'admin'
             });
 
             res.json(newProduct)
         } else {
-            res.send(`Tu rol es ${req.user.role.toUpperCase()}, por lo tanto no puedes crear, actualizar ni eliminar productos.`)
+            res.send(`Tu Role o tu Owner no te permite actualizar ni eliminar productos.`)
         }
 
     } catch (error) {
@@ -134,7 +135,31 @@ export const deleteProductController = async (req, res, next) => {
                 res.send(`¡Producto borrado: ${id}!`)
             }
         } else {
-            res.send(`Tu rol es ${req.user.role.toUpperCase()}, por lo tanto no puedes crear, actualizar ni eliminar productos.`)
+            if (req.user.premium == true) {
+                const productFounded = await productManager.getProductById(id)
+
+                if (!productFounded) {
+                    logger.error('Producto NO encontrado.')
+                    throw new Error('Producto NO encontrado.')
+                }
+
+                if (productFounded.owner == req.user.email) {
+
+                    const deleteProduct = await productManager.deleteProduct(id)
+
+                    if (!deleteProduct) {
+                        throw new Error('No se pudo borrar el producto');
+                    } else {
+                        logger.info('¡Producto borrado!')
+                        res.send(`¡Producto borrado: ${id}!`)
+                    }
+                } else {
+                    res.send('No eres Admin ni has creado el producto, por lo tanto no puedes borrarlo.')
+                }
+
+            } else {
+                res.send(`No eres Premium, por lo tanto no puedes actualizar ni eliminar productos.`)
+            }
         }
 
     } catch (error) {

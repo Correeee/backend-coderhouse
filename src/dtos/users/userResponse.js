@@ -4,6 +4,7 @@ export default class UserResponse{
         this.lastName = user.lastName 
         this.email = user.email 
         this.age = user.age
-        this.role = user.role 
+        this.role = user.role,
+        this.premium = user.premium 
     }
 }

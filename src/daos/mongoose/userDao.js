@@ -6,15 +6,15 @@ export default class UserManagerMongoose {
 
     async createUser(user) {
         try {
-            const { firstName, lastName, email, age, password } = user
+            const { firstName, lastName, email, age, password, premium } = user
 
             const userExist = await userModel.find({ email })
             if (userExist.length == 0) {
                 if (email == 'adminCoder@coder.com') {
-                    const newUser = await userModel.create({ ...user, password: createHash(password), role: 'admin' })
+                    const newUser = await userModel.create({ ...user, password: createHash(password), role: 'admin', premium: true })
                     return newUser
                 } else {
-                    const newUser = await userModel.create({ ...user, password: createHash(password) })
+                    const newUser = await userModel.create({ ...user, password: createHash(password), premium: premium != true ? false : true})
                     return newUser
                 }
             } else {
@@ -64,6 +64,19 @@ export default class UserManagerMongoose {
             if (userExist) {
                 return userExist
             } return false
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+    async updatePremium(uid){
+        try {
+
+            const userExist = await userModel.findById(uid)
+
+            const userUpdate = {...userExist._doc, premium: !userExist._doc.premium}
+            await userModel.findByIdAndUpdate(uid, userUpdate)
+            return userUpdate
         } catch (error) {
             throw new Error(error)
         }

@@ -10,12 +10,13 @@ const productsSchema = new mongoose.Schema({
     code: { type: String, required: true },
     price: { type: Number, required: true },
     thumbnail: { type: String, required: false },
-    stock: { type: Number, required: true }
+    stock: { type: Number, required: true },
+    owner: { type: String, default: 'admin' }
 },
     {
         timestamps: true
     })
 
-    productsSchema.plugin(mongoosePaginate);
+productsSchema.plugin(mongoosePaginate);
 
 export const productsModel = mongoose.model(productsCollection, productsSchema)

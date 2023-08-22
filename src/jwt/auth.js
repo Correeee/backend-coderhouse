@@ -45,7 +45,6 @@ export const checkAuth = async (req, res, next) => {
         }
 
         req.user = new UserResponse(user);
-        
         next()
     } catch (error) {
         console.log(error)

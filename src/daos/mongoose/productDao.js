@@ -30,7 +30,7 @@ export default class ProductsManagerMongoose {
 
     async deleteProduct(id) {
         try {
-            const response = await productsModel.findOneAndDelete(id)
+            const response = await productsModel.findByIdAndDelete(id)
             return response
         } catch (error) {
             throw new Error(error)

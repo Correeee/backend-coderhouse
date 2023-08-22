@@ -1,3 +1,4 @@
+import { checkAuth } from "../../jwt/auth.js";
 import { cartModel } from "../mongoose/models/cartModel.js";
 import { productsModel } from "./models/productsModel.js";
 
@@ -30,10 +31,9 @@ export default class CartManagerMongoose {
         }
     }
 
-    async addToCart(cid, pid) {
+    async addToCart(cid, pid, user) {
         try {
             const findCart = await cartModel.findById(cid);
-            console.log(findCart)
             const allProducts = await productsModel.find();
             const findProduct = allProducts.find((prod) => prod.id === pid);
 
@@ -42,20 +42,27 @@ export default class CartManagerMongoose {
             } else {
                 if (findCart) {
                     const productExist = findCart.products.find((product) => product.product._id == pid);
-                    if (!productExist) {
-                        const newProd = {
-                            quantity: 1,
-                            product: findProduct,
-                        };
-                        findCart.products.push(newProd);
-                        await cartModel.findByIdAndUpdate({ _id: cid }, { $set: findCart });
-                        return findCart;
-                    } else {
-                        const indexProduct = findCart.products.findIndex((elemento) => elemento.product._id == pid);
-                        findCart.products[indexProduct].quantity += 1;
-                        await cartModel.findByIdAndUpdate({ _id: cid }, { $set: findCart });
-                        return findCart;
+
+                    if (productExist.product.owner != user.email || user.role == 'admin') {
+                        
+                        if (!productExist) {
+                            const newProd = {
+                                quantity: 1,
+                                product: findProduct,
+                            };
+                            findCart.products.push(newProd);
+                            await cartModel.findByIdAndUpdate({ _id: cid }, { $set: findCart });
+                            return findCart;
+                        } else {
+                            const indexProduct = findCart.products.findIndex((elemento) => elemento.product._id == pid);
+                            findCart.products[indexProduct].quantity += 1;
+                            await cartModel.findByIdAndUpdate({ _id: cid }, { $set: findCart });
+                            return findCart;
+                        }
+                    }else{
+                        throw new Error("No eres Admin ni Owner de este producto, por lo tanto no puedes eliminarlo.");
                     }
+
                 } else {
                     throw new Error("El carrito NO existe.");
                 }

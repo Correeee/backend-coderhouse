@@ -1,0 +1,109 @@
+components:
+  schemas:
+    AllProductGet:
+    ProductByIdGet:
+    CreateProductPost:
+      type: object
+      required:
+        - title
+        - description
+        - category
+        - code
+        - price
+        - thumbnail
+        - stock
+        - owner
+      properties:
+        title:
+          type: string
+          description: 'Titulo del producto'
+          example: 'Nintendo'
+        description:
+          type: string
+          description: 'Descripción del producto'
+          example: 'Consola de Videojuegos'
+        category:
+          type: string
+          description: 'Categoría del producto'
+          example: 'Consolas'
+        code:
+          type: string
+          description: 'Código del producto'
+          example: 'C1'
+        price:
+          type: number
+          description: 'Precio del producto'
+          example: 150000
+        thumbnail:
+          type: string
+          description: 'Imagen del producto'
+          example: 'www.google.com.ar'
+        stock:
+          type: number
+          description: 'Stock del producto'
+          example: 50
+        owner:
+          type: string
+          description: 'Descripción del producto'
+          example: 'coderhouse@hotmail.com'
+    UpdateProductPut:
+      type: object
+      required:
+        - title
+        - description
+        - category
+        - code
+        - price
+        - thumbnail
+        - stock
+      properties:
+        title:
+          type: string
+          description: 'Titulo del producto'
+          example: 'Nintendo'
+        description:
+          type: string
+          description: 'Descripción del producto'
+          example: 'Consola de Videojuegos'
+        category:
+          type: string
+          description: 'Categoría del producto'
+          example: 'Consolas'
+        code:
+          type: string
+          description: 'Código del producto'
+          example: 'C1'
+        price:
+          type: number
+          description: 'Precio del producto'
+          example: 150000
+        thumbnail:
+          type: string
+          description: 'Imagen del producto'
+          example: 'www.google.com.ar'
+        stock:
+          type: number
+          description: 'Stock del producto'
+          example: 50
+        owner:
+          type: string
+          description: 'Descripción del producto'
+          example: 'coderhouse@hotmail.com'
+    ProductDelete:
+    AllCartGet:
+    CartByIdGet:
+    CreateCartPost:
+    AddToCartPut:
+    EmptyCartDelete:
+    ProductInCartDelete:
+    ChangeQuantityCartPut:
+      type: object
+      required:
+          - quantity
+      properties:
+        quantity:
+          type: Number
+          description: 'Cantidad final del producto.'
+          example: 1
+    FinalizePurchasePost:
+

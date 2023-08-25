@@ -1,0 +1,292 @@
+paths:
+  /products:
+    post:
+      tags:
+        - Products
+      summary: 'Añadir un nuevo producto a la base de datos.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductPost'
+      responses:
+        201:
+          description: Producto creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Products/CreateProductPostResponse'
+        400:
+          description: Error en la solicitud.
+        500:
+          description: Error del servidor.
+    get:
+      tags:
+        - Products
+      summary: 'Recibir todos los productos de la DB.'
+      responses:
+        200:
+          description: Productos recibidos exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Products/AllProductGetResponse'
+        400:
+          description: Error en la solicitud.
+        500:
+          description: Error del servidor.
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: 'Recibir un producto por ID.'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          description: "ID del producto a obtener."
+      responses:
+        200:
+          description: Producto recibido exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Products/ProductByIdResponse'
+        404:
+          description: Producto no encontrado.
+        500:
+          description: Error del servidor.
+    put:
+      tags:
+        - Products
+      summary: 'Actualizar un producto por ID.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductPut'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          description: "ID del producto a obtener."
+      responses:
+        200:
+          description: Producto actualizado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Products/UpdateProductResponse'
+        404:
+          description: Producto no actualizado.
+        500:
+          description: Error del servidor.
+    delete:
+      tags:
+        - Products
+      summary: 'Eliminar un producto por ID.'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          description: "ID del producto a eliminar."
+      responses:
+        200:
+          description: Producto eliminado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Products/ProductDeleteResponse'
+        404:
+          description: Producto no eliminado.
+        500:
+          description: Error del servidor.
+  /carts:
+    get:
+      tags:
+        - Carts
+      summary: 'Devuelve todos los carritos.'
+      responses:
+        200:
+          description: Carritos recibidos exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carts/AllCartGetResponse'
+        404:
+          description: Carritos no recibidos.
+        500:
+          description: Error del servidor.
+    post:
+      tags:
+        - Carts
+      summary: 'Crea un carrito.'
+      responses:
+        200:
+          description: Carrito creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carts/CreateCartPostResponse'
+        404:
+          description: Carrito no creado.
+        500:
+          description: Error del servidor.
+  /carts/{cid}:
+    get:
+      tags:
+        - Carts
+      summary: 'Devuelve un carrito por ID.'
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          type: string
+          description: "ID del carrito a recibir."
+      responses:
+        200:
+          description: Carrito recibido exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carts/CartByIdGetResponse'
+        404:
+          description: Carrito no recibido.
+        500:
+          description: Error del servidor.
+    delete:
+      tags:
+        - Carts
+      summary: 'Vacia un carrito por ID.'
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          type: string
+          description: "ID del carrito a eliminar."
+      responses:
+        200:
+          description: Carrito vaciado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carts/EmptyCartDeleteResponse'
+        404:
+          description: Carrito no vaciado.
+        500:
+          description: Error del servidor.
+  /carts/{cid}/{pid}:
+    put:
+      tags:
+        - Carts
+      summary: 'Agrega un producto al carrito por ID.'
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          type: string
+          description: "ID del carrito a agregar producto."
+        - name: pid
+          in: path
+          required: true
+          type: string
+          description: "ID del producto a agregar al carrito."
+      responses:
+        200:
+          description: Producto agregado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carts/AddToCartPutResponse'
+        404:
+          description: Producto no agregado.
+        500:
+          description: Error del servidor.
+  /carts/{cid}/products/{pid}:
+    delete:
+      tags:
+        - Carts
+      summary: 'Elimina un producto dentro de un carrito, por ID.'
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          type: string
+          description: "ID del carrito en el cual eliminaras un producto."
+        - name: pid
+          in: path
+          required: true
+          type: string
+          description: "ID del producto a eliminar del carrito."
+      responses:
+        200:
+          description: Producto eliminado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carts/ProductInCartDeleteResponse'
+        404:
+          description: Producto no agregado.
+        500:
+          description: Error del servidor.
+    put:
+      tags:
+        - Carts
+      summary: 'Actualiza la cantidad de un producto dentro carrito, por ID.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeQuantityCartPut'
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          type: string
+          description: "ID del carrito en el cual actualizaras la cantidad un producto."
+        - name: pid
+          in: path
+          required: true
+          type: string
+          description: "ID del producto a cambiar la cantidad del carrito."
+      responses:
+        200:
+          description: Cantidad de producto actualizado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carts/ChangeQuantityCartPutResponse'
+        404:
+          description: Cantidad de producto no actualizada.
+        500:
+          description: Error del servidor.
+  /carts/{cid}/purchase:
+    post:
+      tags:
+        - Carts
+      summary: 'Finalizar compra del carrito, por ID.'
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          type: string
+          description: "ID del carrito a finalizar la compra."
+      responses:
+        200:
+          description: Compra finalizada exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carts/FinalizePurchasePostResponse'
+        404:
+          description: Compra no finalizada.
+        500:
+          description: Error del servidor.
+
+

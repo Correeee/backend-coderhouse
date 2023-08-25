@@ -25,7 +25,9 @@ import 'dotenv/config'
 import routerEmail from "./routes/emailRouter.js";
 import routeMocking from "./routes/mockingRouter.js";
 import loggerRouter from "./routes/loggerRouter.js";
-import { logger } from "./utils/logger.js";
+import swaggerUi from 'swagger-ui-express'
+import swaggerJSDoc from "swagger-jsdoc";
+import { info } from './docs/info.js'
 
 const storeOptions = {
     store: new MongoStore({
@@ -55,6 +57,7 @@ app.use(cookieParser())
 app.use(session(storeOptions))
 app.use(passport.initialize())
 app.use(passport.session())
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(info)))
 
 
 /* ------------------------------- HANDLEBARS ------------------------------- */

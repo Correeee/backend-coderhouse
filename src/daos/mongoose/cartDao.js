@@ -86,21 +86,22 @@ export default class CartManagerMongoose {
     async changeQuantity(cid, pid, newQuantity) {
         try {
             const foundedCart = await cartModel.findById(cid)
-            const foundedProduct = foundedCart.products.filter(products => products.product == pid)
-            const restCart = foundedCart.products.filter(products => products.product != pid)
-            const updateQuantityProduct = [{
-                quantity: newQuantity,
-                product: foundedProduct[0].product
-            }]
-
-            const arrayProducts = [
-                ...restCart,
-                ...updateQuantityProduct
-            ]
-
-            const updateCart = await cartModel.findByIdAndUpdate(cid, { products: arrayProducts })
-
-            return updateCart
+            const foundedProduct = foundedCart.products.filter(prod => prod.product._id == pid)
+            
+                const restCart = foundedCart.products.filter(prod => prod.product._id != pid)
+                const updateQuantityProduct = [{
+                    quantity: newQuantity,
+                    product: foundedProduct[0].product
+                }]
+    
+                const arrayProducts = [
+                    ...restCart,
+                    ...updateQuantityProduct
+                ]
+    
+                const updateCart = await cartModel.findByIdAndUpdate(cid, { products: arrayProducts })
+    
+                return updateCart
 
         } catch (error) {
             throw new Error(error.message)

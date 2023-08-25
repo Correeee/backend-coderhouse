@@ -132,9 +132,7 @@ export const changeQuantityController = async (req, res, next) => {
     try {
         const { cid, pid } = req.params
         const { quantity } = req.body
-
         const updatedCartProduct = await cartManager.changeQuantity(cid, pid, Number(quantity))
-
         if (!updatedCartProduct) {
             logger.error(`No se pudo actualizar la cantidad de: ${quantity} en el Producto: ${pid} del Carrito: ${cid}.`)
             throw new Error(`No se pudo actualizar la cantidad de: ${quantity} en el Producto: ${pid} del Carrito: ${cid}.`)

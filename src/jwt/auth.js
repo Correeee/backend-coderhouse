@@ -30,7 +30,7 @@ export const generateToken = (user) => {
 export const checkAuth = async (req, res, next) => {
     try {
         const authHeader = req.headers['authorization'] || req.headers.authorization;
-
+        
         if (!authHeader) {
             return res.status(401).json({ msg: 'Unauthorized AUTH HEADER' })
         }
@@ -43,7 +43,6 @@ export const checkAuth = async (req, res, next) => {
         if (!user) {
             return res.status(401).json({ msg: 'Unauthorized USER' })
         }
-
         req.user = new UserResponse(user);
         next()
     } catch (error) {

@@ -1,7 +1,8 @@
 import cookieParser from "cookie-parser";
 import UserManagerMongoose from "../daos/mongoose/userDao.js";
-import { generateToken } from "../jwt/auth.js";
+import { checkAuth, generateToken } from "../jwt/auth.js";
 import { logger } from "../utils/logger.js";
+import uploadFile from "../utils/uploadFiles.js";
 
 const userManager = new UserManagerMongoose()
 
@@ -40,7 +41,7 @@ export const loginUserController = async (req, res, next) => {
             return res.json({ msg: 'Invalid credentials' })
         } else {
             const accessToken = generateToken(loginUser)
-            res.header('authorization', accessToken).json({ msg: 'Login OK', accessToken })
+            res.header('authorization', accessToken).json({ msg: 'Login OK', accessToken, id: loginUser._id })
         }
     } catch (error) {
         next(error)
@@ -129,6 +130,39 @@ export const premiumUserController = async (req, res, next) => {
         const { uid } = req.params
         const userUpdate = await userManager.updatePremium(uid)
         res.send(`Usuario ${uid} --> Premium: ${userUpdate.premium == true ? 'Activado' : 'Desactivado'} `)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const userDocuments = async (req, res, next) => {
+    try {
+        const { uid } = req.params
+        const response = await checkAuth(req, res)
+
+        if (response === undefined) {
+
+            const file = await uploadFile(req, res)
+                .then((filePath) => {
+                    return filePath
+                })
+                .catch((error) => {
+                    res.status(500).json({ error: error.message });
+                });
+
+            if (file) {
+
+                const documents = {
+                    date: new Date().toLocaleString(),
+                    filePath: file
+                }
+
+                await userManager.sendDocuments(uid, documents)
+                res.status(200).json(documents)
+            }
+
+        }
+
     } catch (error) {
         next(error)
     }

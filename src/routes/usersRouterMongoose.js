@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUserController, githubResponse, loginResponse, loginUserController, logoutController, profileInfoController, registerResponse, premiumUserController } from "../controllers/userController.js";
+import { createUserController, githubResponse, loginResponse, loginUserController, logoutController, profileInfoController, registerResponse, premiumUserController, userDocuments } from "../controllers/userController.js";
 import passport from "passport";
 import { frontResponseGithub } from "../passport/github.js";
 import { checkAuth } from "../jwt/auth.js";
@@ -24,6 +24,7 @@ const router = Router()
 router.post('/registerJWT', createUserController)
 router.post('/loginJWT', loginUserController)
 router.put('/premium/:uid', premiumUserController)
+router.post('/premium/:uid/documents', userDocuments)
 router.get('/current', checkAuth, (req, res) => {
 
     res.json({

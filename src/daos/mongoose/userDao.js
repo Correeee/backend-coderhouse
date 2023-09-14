@@ -14,7 +14,7 @@ export default class UserManagerMongoose {
                     const newUser = await userModel.create({ ...user, password: createHash(password), role: 'admin', premium: true })
                     return newUser
                 } else {
-                    const newUser = await userModel.create({ ...user, password: createHash(password), premium: premium != true ? false : true})
+                    const newUser = await userModel.create({ ...user, password: createHash(password), premium: premium != true ? false : true })
                     return newUser
                 }
             } else {
@@ -33,7 +33,7 @@ export default class UserManagerMongoose {
             if (userExist.length != 0) {
                 const hashPassword = userExist.password
                 const passwordValid = passwordValidator(password, hashPassword)
-
+                await userModel.findOneAndUpdate({ email: email }, { $set: { lastConnection: new Date().toLocaleString() } })
                 if (!passwordValid) {
                     return false
                 } else {
@@ -69,16 +69,30 @@ export default class UserManagerMongoose {
         }
     }
 
-    async updatePremium(uid){
+    async updatePremium(uid) {
         try {
 
             const userExist = await userModel.findById(uid)
 
-            const userUpdate = {...userExist._doc, premium: !userExist._doc.premium}
+            const userUpdate = { ...userExist._doc, premium: !userExist._doc.premium }
             await userModel.findByIdAndUpdate(uid, userUpdate)
             return userUpdate
         } catch (error) {
             throw new Error(error)
+        }
+    }
+
+    async sendDocuments(uid, documents) {
+        try {
+            const userExist = await userModel.findById(uid)
+            if(userExist){
+                const userUpdate = await userModel.findByIdAndUpdate(uid, { $set: { documents: [...userExist.documents, {...documents}] } })
+                return userUpdate
+            }else{
+                return false
+            }
+        } catch (error) {
+            throw new Error('El usuario no existe o no se pudo actualizar los Documentos.')
         }
     }
 

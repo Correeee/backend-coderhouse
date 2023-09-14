@@ -46,7 +46,9 @@ export const getProductsByIdController = async (req, res, next) => {
 
 export const createProductController = async (req, res, next) => {
     try {
+        await checkAuth(req)
         if (req.user.role == 'admin' || req.user.premium == true) {
+
             const { title, description, category, code, price, thumbnail, stock, owner } = req.body;
 
             const newProduct = await productManager.createProduct({

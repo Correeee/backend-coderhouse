@@ -117,3 +117,4 @@ socketServer.on('connection', async (socket) => {
 })
 
 
+export default app

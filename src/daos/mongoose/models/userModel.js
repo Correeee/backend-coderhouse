@@ -9,7 +9,9 @@ const userSchema = new mongoose.Schema({
     age: { type: Number, required: true },
     password: { type: String, required: true },
     role: { type: String, default: 'user' },
-    premium: { type: Boolean, default: false }
+    premium: { type: Boolean, default: false },
+    documents: { type: Array, default: [] },
+    lastConnection: { type: String, require: false }
 }, {
     timestamps: true
 })

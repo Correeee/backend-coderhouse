@@ -57,7 +57,7 @@ app.use(cookieParser())
 app.use(session(storeOptions))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(info)))
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(info))) 
 
 
 /* ------------------------------- HANDLEBARS ------------------------------- */

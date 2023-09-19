@@ -62,9 +62,9 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(info)))
 
 /* ------------------------------- HANDLEBARS ------------------------------- */
 
-app.engine('handlebars', Handlebars.engine());
-app.set('view engine', 'handlebars');
-app.set('views', __dirname + '/views');
+// app.engine('handlebars', Handlebars.engine());
+// app.set('view engine', 'handlebars');
+// app.set('views', __dirname + '/views');
 
 /* ---------------------------------- STYLE --------------------------------- */
 

@@ -19,7 +19,7 @@ const router = Router()
 // router.get('/profileGithub', passport.authenticate('githubPassport', { scope: ['user:email'] }), githubResponse)
 
 /* -------------------------- JWT - JSON WEB TOKEN -------------------------- */
-/* ---------------------------- USAR ESTAS RUTAS ---------------------------- */
+/* ---------------------------- UTILIZAR ESTAS RUTAS ---------------------------- */
 
 router.post('/registerJWT', createUserController)
 router.post('/loginJWT', loginUserController)

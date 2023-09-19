@@ -85,10 +85,10 @@ export default class UserManagerMongoose {
     async sendDocuments(uid, documents) {
         try {
             const userExist = await userModel.findById(uid)
-            if(userExist){
-                const userUpdate = await userModel.findByIdAndUpdate(uid, { $set: { documents: [...userExist.documents, {...documents}] } })
+            if (userExist) {
+                const userUpdate = await userModel.findByIdAndUpdate(uid, { $set: { documents: [...userExist.documents, { ...documents }] } })
                 return userUpdate
-            }else{
+            } else {
                 return false
             }
         } catch (error) {
@@ -96,4 +96,59 @@ export default class UserManagerMongoose {
         }
     }
 
+    async getAllUsers() {
+        try {
+
+            const allUsers = await userModel.find()
+            const userPrincipalData = []
+            allUsers.map(user => {
+                const userData = {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    role: user.role
+                }
+                userPrincipalData.push(userData)
+            })
+
+            return userPrincipalData
+        } catch (error) {
+            throw new Error('No se pudo obtener todos los usuarios')
+        }
+    }
+
+    async deleteUsers() {
+        try {
+
+            const allUsers = await userModel.find()
+            const toDeleteUsers = []
+            allUsers.map(user => {
+                if (user.lastConnection) {
+                    const userDate = user.lastConnection.split(',')[0]
+                    const localDate = new Date().toLocaleString().split(',')[0]
+
+                    const splitDateOne = userDate.split('/');
+                    const dateOne = new Date(splitDateOne[2], splitDateOne[1] - 1, splitDateOne[0]);
+
+                    const splitDateTwo = localDate.split('/');
+                    const dateTwo = new Date(splitDateTwo[2], splitDateTwo[1] - 1, splitDateTwo[0]);
+
+                    const differenceMS = Math.abs(dateOne - dateTwo);
+                    const daysDifference = differenceMS / (1000 * 60 * 60 * 24);
+                    if (daysDifference >= 2) {
+                        toDeleteUsers.push(user.id)
+                    }
+                }
+            })
+
+            if (toDeleteUsers.length) {
+                const response = await userModel.deleteMany({ _id: { $in: toDeleteUsers } })
+                return response
+            }else{
+                return false
+            }
+
+        } catch (error) {
+            throw new Error('No se pudo obtener todos los usuarios')
+        }
+    }
 }

@@ -1,9 +1,12 @@
 import ProductsManagerMongoose from "../daos/mongoose/productDao.js";
+import UserManagerMongoose from "../daos/mongoose/userDao.js";
 import { checkAuth } from "../jwt/auth.js";
+import { transporter } from "../services/emailService.js";
 import { logger } from "../utils/logger.js";
 
 
 const productManager = new ProductsManagerMongoose()
+const userManager = new UserManagerMongoose()
 
 export const getAllController = async (req, res, next) => {
     try {
@@ -120,7 +123,10 @@ export const deleteProductController = async (req, res, next) => {
         await checkAuth(req)
 
         if (req.user.role == 'admin') {
+
+
             const productFounded = await productManager.getProductById(id)
+            const userFounded = await userManager.getByEmail(productFounded.owner)
 
             if (!productFounded) {
                 logger.error('Producto NO encontrado.')
@@ -132,6 +138,16 @@ export const deleteProductController = async (req, res, next) => {
             if (!deleteProduct) {
                 throw new Error('No se pudo borrar el producto');
             } else {
+                if (userFounded.premium === true) {
+                    const mailOptions = {
+                        from: process.env.EMAIL,
+                        to: userFounded.email,
+                        subject: `Backend Coderhouse`,
+                        text: `Producto ${productFounded.title} con id: ${productFounded._id}, eliminado por el Admin.`
+                    }
+
+                    await transporter.sendMail(mailOptions)
+                }
                 logger.info('¡Producto borrado!')
                 res.send(`¡Producto borrado: ${id}!`)
             }

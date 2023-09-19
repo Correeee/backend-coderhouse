@@ -16,3 +16,4 @@ export const mailOptions = {
     subject: 'Bienvenido',
     text: 'Bienvenido al Backend de Maximiliano Correa'
 }
+

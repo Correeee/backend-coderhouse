@@ -168,3 +168,27 @@ export const userDocuments = async (req, res, next) => {
     }
 }
 
+export const allUsers = async (req, res, next) => {
+    try {
+        const response = await userManager.getAllUsers()
+        if (!response) {
+            res.status(401).send('No se pudieron obtener los usuarios.')
+        }
+        res.status(200).json(response)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const deleteUsers = async (req, res, next) => {
+    try {
+        const response = await userManager.deleteUsers()
+        if (!response) {
+            res.status(401).send('No se borró ningún usuario.')
+        }
+        res.status(200).send(`Cantidad de usuarios eliminados: ${response.deletedCount}`)
+    } catch (error) {
+        next(error)
+    }
+}
+
